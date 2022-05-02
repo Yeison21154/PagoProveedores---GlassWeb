@@ -1,0 +1,48 @@
+<nav class="navbar-default navbar-static-side" role="navigation">
+    <div class="sidebar-collapse">
+        <ul class="nav metismenu" id="side-menu">
+            <li class="nav-header">
+                <div class="dropdown profile-element">
+                    <img alt="image" class="rounded-circle" src="assets/img/profile_small.jpg"/>
+                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                        <span class="block m-t-xs font-bold">{{ user.Nombres }}</span>
+                        <span class="text-muted text-xs block">Administrador<b class="caret"></b></span>
+                    </a>
+                    <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                        <li><a class="dropdown-item" href="profile.html">Cambiar contraseña</a></li>
+                        <li><a class="dropdown-item" [routerLink]="'seleccion-sucursal'">Cambiar Sucursal</a></li>
+                        <li class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" (click)="CerrarSesion()">Cerrar Sesión</a></li>
+                    </ul>
+                </div>
+                <div class="logo-element">
+                    {{ NombreMobile }}
+                </div>
+            </li>
+            <li #MenuCompras >
+                <a href="#"><i class="fa fa-shopping-cart"></i> <span class="nav-label">Compras y Logistica</span> <span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+                    <li><a [routerLink]="'compras'" routerLinkActive="active">Compra Directa</a></li>
+                </ul>
+            </li>
+            <li #MenuCT>
+                <a href="#"><i class="fa fa-university"></i> <span class="nav-label">Tesorería</span> <span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+                    <li><a #menuProveedor [routerLink]="'proveedor'" routerLinkActive="active">Pago a Proveedores</a></li>
+                    <li><a #MenuCobranzas [routerLink]="'cobranzas'" routerLinkActive="active">Ingreso por cobro a clientes</a></li>
+                    <li><a #MenuCobranzasNuevo [routerLink]="'cobranzas/crear'" routerLinkActive="active">Ingreso por cobro a clientes</a></li>
+                    <li><a #MenuTransferencia [routerLink]="'transferencia-banco'" routerLinkActive="active">Transferencia de Bancos (Vales de Entrega)</a></li>
+                  </ul>
+            </li>
+            <!-- <li>
+                <a href="#"><i class="fa fa-cog"></i> <span class="nav-label">Configuración</span><span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level collapse">
+                    <li><a [routerLink]="'persona'" routerLinkActive="active">Persona</a></li>
+                    <li><a [routerLink]="'productos'" routerLinkActive="active">Productos</a></li>
+                    <li><a [routerLink]="'condicion-pago'" routerLinkActive="active">Condición Pago</a></li>
+                </ul>
+            </li> -->
+        </ul>
+
+    </div>
+</nav>

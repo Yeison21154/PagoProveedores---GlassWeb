@@ -1,0 +1,26 @@
+<div class="row border-bottom">
+    <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+        <div class="navbar-header">
+            <a class="navbar-minimalize minimalize-styl-2 btn btn-info " href="#"><i class="fa fa-bars"></i> </a>
+        </div>
+        <ul class="nav navbar-top-links navbar-right">
+            <li>
+                <span class="m-r-sm text-muted welcome-message">Empresa: {{ user.Empresa.RazonSocial }} |</span>
+            </li>
+            
+            <li>
+                <span class="m-r-sm text-muted welcome-message">Sucursal: {{ oSesionSurcursal.Descsucursal }} |</span>
+            </li>
+            
+            <li>
+                <span class="m-r-sm text-muted welcome-message">Bienvenido(a) {{ user.Nombres }}</span>
+            </li>
+            <li>
+                <a (click)="CerrarSesion()">
+                    <i class="fa fa-sign-out"></i> Cerrar Sesión
+                </a>
+            </li>
+        </ul>
+
+    </nav>
+</div>

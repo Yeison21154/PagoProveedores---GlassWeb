@@ -1,0 +1,830 @@
+<div class="row">
+  <div class="col-lg-12">
+    <div class="wrapper wrapper-content">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="ibox">
+            <div class="ibox-title">
+              <h5>{{nombrePag}}</h5>
+              <div class="ibox-tools">
+                  <a class="collapse-link" href="">
+                      <i class="fa fa-chevron-up"></i>
+                  </a>
+              </div>
+          </div>
+          <div class="ibox-content">
+            <form [formGroup]="formProveedor" (ngSubmit)="GuardarPagoProveedor()" (keydown.enter)="$event.preventDefault()">
+              <div class="form-group row">
+                <div class="col-md-7">
+                  <div class="form-group row">
+                    <label class="col-lg-1 col-form-label">Banco:</label>
+                      <div class="col-lg-5">
+                        <div class="input-group">
+                          <input type="text" id="exampleInputEmail2"
+                          class="form-control form-control-sm col-md-12"
+                          [(ngModel)]="oProveedor.Banco.CodBanco" readonly
+                          formControlName="CodBanco">
+                          <span class="input-group-append">
+                              <button type="button"
+                              (click)="AbrirModalBanco(contentBanco,$event)"
+                              class="btn btn-success btn-sm"  #btnBanco>
+                              <i class="fa fa-binoculars"></i>
+                          </button>
+                          </span>
+                        </div>
+                      </div>
+                      <input type="text" id="exampleInputEmail2"
+                      class="form-control form-control-sm col-lg-5" readonly name="NomBanco"
+                      [(ngModel)]="oProveedor.Banco.DescBanco"
+                      #NomBanco
+                      formControlName="NomBanco">
+                    </div>
+                    <span *ngIf="isVisualizar && formProveedor.controls.NomBanco.errors?.required" class="badge badge-danger">Requerido</span>
+                  <div class="form-group row mt-5">
+                    <div class="row col-lg-3">
+                      <input type="checkbox" [(ngModel)]="isChe" (ngModelChange)="Validar()" formControlName="chechk" class="form-control-sm">
+                      <label class="col-form-label">&nbsp;Cheque:</label>
+                    </div>
+                        <div class="col-lg-4">
+                          <div class="input-group">
+                              <input type="text" id="exampleInputEmail3"
+                              class="form-control form-control-sm col-md-12" readonly
+                              [(ngModel)]="oProveedor.Cheque.CodCheque"
+                              formControlName="CodCheque">
+                              <span class="input-group-append">
+                                <button type="button"
+                                *ngIf="isChe"
+                                (click)="AbrirModalCheque(contentCheque,$event)"
+                                    class="btn btn-success btn-sm">
+                                    <i class="fa fa-binoculars"></i>
+                                </button>
+                              </span>
+                            </div>
+                          </div>
+                          <input type="text" id="exampleInputEmail4"
+                          class="form-control form-control-sm col-lg-5" readonly name="NomCheque"
+                          [(ngModel)]="oProveedor.Cheque.NumeroCheque"
+                          #NomCheque
+                          formControlName="NomCheque">
+                        </div>
+                        <span *ngIf="isVisualizar && formProveedor.controls.NomCheque.errors?.required" class="badge badge-danger">Requerido</span>
+                    <div class="form-group row mt-5">
+                      <label lass="col-lg-1 col-form-label">&nbsp;&nbsp;&nbsp;&nbsp;Cajero:</label>
+                        <div class="col-lg-10">
+                          <div class="input-group">
+                              <input type="text" id="exampleInputEmail5"
+                              class="form-control form-control-sm col-md-12" readonly
+                              [(ngModel)]="oProveedor.Cajero.CodCajero"
+                              formControlName="CodCajero">&nbsp;&nbsp;&nbsp;&nbsp;
+                              <input type="text" id="exampleInputEmail2"
+                              class="form-control form-control-sm col-md-6" readonly name="NomCajero"
+                              #NomCajero
+                              [(ngModel)]="oProveedor.Cajero.DescCajero"
+                              formControlName="NomCajero">
+                            </div>
+                          </div>
+                        </div>
+                        <span *ngIf="isVisualizar && formProveedor.controls.NomCajero.errors?.required" class="badge badge-danger">Requerido</span>
+                      </div>
+                <div class="col-md-5">
+                  <div class="panel panel-primary">
+                      <div class="panel-heading">
+                          <i class="fa fa-info-circle"></i> Tipo Operación
+                      </div>
+                      <div class="panel-body form-group">
+                          <div class="col-md-12">
+                              <label>Operación:</label>
+                              <select class="form-control form-control-sm"
+                              [(ngModel)]="oProveedor.CodClaseDoc"
+                              (ngModelChange)="SeleccionarTipoOperacion()"
+                              required
+                              #CodDocumento
+                              formControlName="CodClaseDoc">
+                                  <option value="">-Seleccione-</option>
+                                  <option *ngFor="let item of lstOperacion" [ngValue]="item.CodDocumento">{{item.DescDocumento}}</option>
+                              </select>
+                              <span *ngIf="isVisualizar && formProveedor.controls.CodClaseDoc.errors?.required" class="badge badge-danger">Requerido</span>
+                          </div>
+                          <br>
+                          <div class="form-group row">
+                              <div class="col-md-6">
+                                  <input type="text" placeholder="Serie"
+                                          class="form-control form-control-sm"
+                                          name="Serie"
+                                          autocomplete="off"
+                                          #Serie
+                                          [(ngModel)]="oProveedor.Serie"
+                                          formControlName="Serie"
+                                          >
+                                  <span *ngIf="isVisualizar && formProveedor.controls.Serie.errors?.required" class="badge badge-danger">Requerido</span>
+                              </div>
+                              <div class="col-md-6">
+                                  <input type="text" placeholder="Nro"
+                                          class="form-control form-control-sm" maxlength="8"
+                                          name="Nro"
+                                          autocomplete="off"
+                                          #Nro
+                                          [(ngModel)]="oProveedor.numero"
+                                          formControlName="Nro">
+                                  <span *ngIf="isVisualizar && formProveedor.controls.Nro.errors?.required" class="badge badge-danger">Requerido</span>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              </div>
+
+              <div class="form-group row">
+                <div class="col-md-12 border-bottom">
+                    <label>Otros Datos</label>
+                </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-8">
+                <div class="form-group row">
+                  <div class="col-md-3">
+                    <label>Total pagar:</label>
+                    <input type="text" (keypress)="soloNumeros($event)" id="exampleInputEmail5"
+                    class="form-control form-control-sm" [(ngModel)]="oProveedor.TotalPagar" formControlName="TotalPagar" >
+                    <span *ngIf="isVisualizar && formProveedor.controls.TotalPagar.errors?.required" class="badge badge-danger">Requerido</span>
+                  </div>
+                  <div class="col-md-3">
+                    <label>Estado:</label>
+                    <select class="form-control form-control-sm" readonly disabled="true" [(ngModel)]="oProveedor.EstadoDet" formControlName="EstadoDet">
+                      <option value="0"></option>
+                      <option value="2">Anulado</option>
+                      <option value="4">Aprobado</option>
+                    </select>
+                  </div>
+                  <div class="col-md-3">
+                    <label>Fec.Salida Banco:</label>
+                      <input type="text" placeholder="dd/mm/yyyy"
+                      class="form-control form-control-sm" [(ngModel)]="oProveedor.dFecEmision"
+                      name="FecEmision"
+                      ngbDatepicker #FecEmision="ngbDatepicker" (focus)="FecEmision.toggle()"
+                      autocomplete="off"
+                      (blur)="ObtenerTipoCambio()"
+                      (ngModelChange)="ObtenerTipoCambio()"
+                      formControlName="FecEmision" >
+                      <span *ngIf="isVisualizar && formProveedor.controls.FecEmision.errors?.required" class="badge badge-danger">Requerido</span>
+                  </div>
+                  <div class="col-md-3">
+                    <label>Fec.Registro:</label>
+                    <input type="text" placeholder="dd/mm/yyyy"
+                    class="form-control form-control-sm" [(ngModel)]="oProveedor.dFecRegistro"
+                    name="FecRegistro"
+                    ngbDatepicker #FecRegistro="ngbDatepicker" (focus)="FecRegistro.toggle()"
+                    autocomplete="off"
+                    formControlName="FecRegistro" >
+                    <span *ngIf="isVisualizar && formProveedor.controls.FecRegistro.errors?.required" class="badge badge-danger">Requerido</span>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <div class="col-md-2">
+                    <label class="col-lg-1 col-form-label">T/C</label>
+                    <input type="text" (keypress)="soloNumeros($event)" class="form-control form-control-sm" [(ngModel)]="oProveedor.ValorTC" formControlName="ValorTC">
+                  </div>
+                  <div class="col-md-6">
+                    <label>Glosa:</label>
+                    <input class="form-control form-control-sm" [(ngModel)]="oProveedor.Cheque.comentarioDoc" formControlName="Glosa" readonly>
+                  </div>
+                  <div class="col-md-2">
+                    <label>Moneda</label>
+                    <input type="text" class="form-control form-control-sm" [(ngModel)]="oProveedor.Banco.DescMoneda" formControlName="DescMoneda" readonly>
+                  </div>
+                  <div class="col-md-2">
+                    <button class="btn btn-success btn-sm mt-4" (click)="AnularProveedor()" type="button" [disabled]="EsEnableAnular">
+                      <i class="fa fa-ban"></i>&nbsp;
+                      <span>Anular</span>
+                  </button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <label>Comentario:</label>
+                <textarea class="form-control form-control-sm" rows="4" [(ngModel)]="oProveedor.comentarioDet" formControlName="comentarioDet">
+                </textarea>
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-12">
+                <ngx-datatable
+                #tbDetalle
+                class="material striped"
+                [headerHeight]="50"
+                [footerHeight]="50"
+                [count]="true"
+                [columnMode]="'fixed'"
+                [scrollbarH]="true"
+                [rowHeight]="'35'"
+                [reorderable]="true"
+                [rows]="lstDetallePago"
+                (activate)="SeleccionarDetalle($event)"
+                [messages]="{
+                  emptyMessage: 'No hay registros',
+                  totalMessage: 'Total',
+                  selectedMessage: 'Seleccionado'
+                }"
+                >
+                <ngx-datatable-column name="Tipo Documento" prop="tipoDocumento" [sortable]="false" [resizeable]="false" [width]="160" [cellClass]="'padding-top-custom'" >
+                  <ng-template let-row="row" let-rowIndex="rowIndex" let-value="value" ngx-datatable-cell-template>
+                    <span
+                      title="Doble click para editar"
+                      (click)="editing[rowIndex + '-tipoDocumento'] = true  && Modificar"
+                      *ngIf="!editing[rowIndex + '-tipoDocumento']">
+                          {{ value }}
+                    </span>
+                    <select autofocus
+                    #ddlTipoDoc
+                    class="form-control form-control-sm"
+                    [value]="value"
+                    (blur)="ActualizarFila($event, 'tipoDocumento', rowIndex)"
+                    *ngIf="editing[rowIndex + '-tipoDocumento']">
+                        <option value="Documento">Documento</option>
+                        <option value="Diversos">Diversos</option>
+                        <option value="Anticipo">Anticipo</option>
+                    </select>
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column disabled="true" name="Item" prop="NumItem" [sortable]="false" [resizeable]="false" [width]="50" [cellClass]="'padding-top-custom'" ></ngx-datatable-column>
+                <ngx-datatable-column name="CodProveedor" prop="CodProveedor" [sortable]="false" [resizeable]="false" [width]="110" [cellClass]="'padding-top-custom'" ></ngx-datatable-column>
+                <ngx-datatable-column name="Proveedor" prop="nomProveedor" [sortable]="false" [resizeable]="false" [width]="250" [cellClass]="'padding-top-custom'" ></ngx-datatable-column>
+                <ngx-datatable-column name="Cod.Documento" prop="CodDocumento" [sortable]="false" [resizeable]="false" [width]="80" [cellClass]="'padding-top-custom'" ></ngx-datatable-column>
+                <ngx-datatable-column name="Documento" prop="DescDocumento" [sortable]="false" [resizeable]="false" [width]="100" [cellClass]="'padding-top-custom'" ></ngx-datatable-column>
+                <ngx-datatable-column name="Serie" prop="Serie" [sortable]="false" [resizeable]="false" [width]="60" [cellClass]="'padding-top-custom'" ></ngx-datatable-column>
+                <ngx-datatable-column name="Numero" prop="Nro" [sortable]="false" [resizeable]="false" [width]="90" [cellClass]="'padding-top-custom'" ></ngx-datatable-column>
+                <ngx-datatable-column name="ValorTC" prop="ValorTC" [sortable]="false" [resizeable]="false" [width]="90" [cellClass]="'padding-top-custom'" >
+                  <ng-template let-row="row" let-rowIndex="rowIndex" let-value="value" ngx-datatable-cell-template>
+                    <span
+                    title="Doble click para editar"
+                    (dblclick)="editing[rowIndex + '-ValorTC'] = true && Modificar"
+                    *ngIf="!editing[rowIndex + '-ValorTC']"
+                    class="float-right">
+                        {{ value != "" || value == "0" ? value.toFixed(2) : "" }}
+                        <!-- {{ value }} -->
+                    </span>
+                    <input
+                    autofocus
+                    (blur)="ActualizarFila($event, 'ValorTC', rowIndex)"
+                    *ngIf="editing[rowIndex + '-ValorTC']"
+                    (keydown.enter)="$event.target.blur();"
+                    type="text"
+                    [value]="value"
+                    class="form-control form-control-sm text-left"
+                    (keypress)="soloNumeros($event)"/>
+                </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="CodMoneda" prop="CodMoneda" [sortable]="false" [resizeable]="false" [width]="90" [cellClass]="'padding-top-custom'" ></ngx-datatable-column>
+                <ngx-datatable-column name="Moneda" prop="DescMoneda" [sortable]="false" [resizeable]="false" [width]="90" [cellClass]="'padding-top-custom'" ></ngx-datatable-column>
+                <ngx-datatable-column name="TotalMN" prop="TotalMN" [sortable]="false" [resizeable]="false" [width]="90" [cellClass]="'padding-top-custom'" >
+                  <ng-template let-row="row" let-rowIndex="rowIndex" let-value="value" ngx-datatable-cell-template>
+                    <span
+                    title="Doble click para editar"
+                    (dblclick)="editing[rowIndex + '-TotalMN'] = true && Modificar"
+                    *ngIf="!editing[rowIndex + '-TotalMN']"
+                    class="float-right">
+                        {{ value != "" || value == "0" ? value.toFixed(2) : "" }}
+                        <!-- {{ value }} -->
+                    </span>
+                    <input
+                    autofocus
+                    (blur)="ActualizarFila($event, 'TotalMN', rowIndex)"
+                    *ngIf="editing[rowIndex + '-TotalMN']"
+                    (keydown.enter)="$event.target.blur();"
+                    type="text"
+                    [value]="value"
+                    class="form-control form-control-sm text-right"
+                    (keypress)="soloNumeros($event)"/>
+                </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="TotalME" prop="TotalME" [sortable]="false" [resizeable]="false" [width]="90" [cellClass]="'padding-top-custom'" >
+                  <ng-template let-row="row" let-rowIndex="rowIndex" let-value="value" ngx-datatable-cell-template>
+                    <span
+                    title="Doble click para editar"
+                    (dblclick)="editing[rowIndex + '-TotalME'] = true && Modificar"
+                    *ngIf="!editing[rowIndex + '-TotalME']"
+                    class="float-right">
+                        {{ value != "" || value == "0" ? value.toFixed(2) : "" }}
+                        <!-- {{ value }} -->
+                    </span>
+                    <input
+                      autofocus
+                      (blur)="ActualizarFila($event, 'TotalME', rowIndex)"
+                      *ngIf="editing[rowIndex + '-TotalME']"
+                      (keydown.enter)="$event.target.blur();"
+                      type="text"
+                      [value]="value"
+                      class="form-control form-control-sm text-right"
+                      (keypress)="soloNumeros($event)"/>
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Cta.Contable" prop="Codctacontable" [sortable]="false" [resizeable]="false" [width]="110" [cellClass]="'padding-top-custom'" ></ngx-datatable-column>
+                <ngx-datatable-column name="Descripcion" prop="DescPlanContable" [sortable]="false" [resizeable]="false" [width]="150" [cellClass]="'padding-top-custom'" ></ngx-datatable-column>
+                <!-- <ngx-datatable-column name="No-Most" prop="Mostrar" [sortable]="false"  [resizeable]="false" [cellClass]="'padding-top-custom'" ></ngx-datatable-column> -->
+                </ngx-datatable>
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-12">
+                <div class="col-md-12 float-rigth">
+                  <div class="form-froup row">
+                    <label class="col-sm-10 col-form-label text-right">Total MN:</label>
+                    <div class="col-sm-2">
+                      <input type="text" class="form-control form-control-sm text-right" [(ngModel)]="oProveedor.TotalMN"
+                      formControlName="TotalMN" readonly></div>
+                  </div>
+                  <div class="form-froup row">
+                    <label class="col-sm-10 col-form-label text-right">Total ME:</label>
+                    <div class="col-sm-2">
+                      <input type="text" class="form-control form-control-sm text-right" [(ngModel)]="oProveedor.TotalME"
+                      formControlName="TotalME" readonly></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-12 col-sm-offset-2 d-flex flex-row justify-content-end">
+                <a class="btn btn-danger btn-sm " [routerLink]="'/GlassWeb/proveedor'">
+                  <i class="fa fa-undo"></i>&nbsp;
+                  <span>Regresar</span>
+              </a>&nbsp;&nbsp;
+              <button class="btn btn-info btn-sm" type="submit" [disabled]="ocultar" >
+                <i class="fa fa-save"></i>&nbsp;
+                <span>Guardar</span>
+            </button>
+              </div>
+            </div>
+            </form>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!----------------------------------MODAL BANCOS---------------------------------------------------->
+<ng-template #contentBanco let-modal>
+  <div class="modal-header">
+    <h3 class="modal-title" id="modal-basic-title">Buscar Banco</h3>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form (keydown.enter)="$event.preventDefault()">
+      <div class="form-group row">
+          <div class="col-md-4">
+                <select class="form-control form-control-sm" (change)="tipoBusquedaBanco = $event.target.value">
+                    <option value="1">Por nombre</option>
+                    <option value="0">Por código</option>
+                    <option value="2">Por moneda</option>
+                </select>
+          </div>
+          <div class="col-md-6">
+              <input type="text" #txtBusquedaBanco placeholder="Ingrese un valor"
+              (keyup)="BuscarBanco($event)" class="form-control form-control-sm"
+                autocomplete="off" >
+          </div>
+      </div>
+      <div class="form-group">
+          <div class="col-md-12">
+                <ngx-datatable
+                #tbBanco
+                class="material"
+                [headerHeight]="50"
+                [footerHeight]="50"
+                [count]="true"
+                [columnMode]="'fixed'"
+                [scrollbarH]="true"
+                [rowHeight]="'35'"
+                [reorderable]="true"
+                [limit]="10"
+                [rows]="lstBanco"
+                [messages]="{
+                    emptyMessage: 'No hay registros',
+                    totalMessage: 'Total',
+                    selectedMessage: 'Seleccionado'
+                    }">
+                    <ngx-datatable-column name="" [width] = "70" [cellClass]="'padding-top-custom'" >
+                        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                            <button md-icon-button class="btn btn-primary btn-sm"(click)="SeleccionarBanco($event,row)">
+                                <i class="fa fa-check"></i>
+                            </button>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Código" prop="CodBanco" [sortable]="false" [resizeable]="true" [width] = "80" [cellClass]="'padding-top-custom'" ></ngx-datatable-column>
+                    <ngx-datatable-column name="Nombre Banco" prop="DescBanco"  [resizeable]="true" [width] = "400" [cellClass]="'padding-top-custom'" ></ngx-datatable-column>
+                    <ngx-datatable-column name="Moneda" prop="DescMoneda"  [resizeable]="true" [width] = "137" [cellClass]="'padding-top-custom'" ></ngx-datatable-column>
+                </ngx-datatable>
+          </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger" (click)="modal.close()">Cerrar</button>
+  </div>
+</ng-template>
+<!----------------------------------MODAL CHEQUES---------------------------------------------------->
+<ng-template #contentCheque let-modal>
+  <div class="modal-header">
+    <h3 class="modal-title" id="modal-basic-title">Lista de Cheques Emitidos</h3>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form (keydown.enter)="$event.preventDefault()">
+      <div class="form-group row">
+          <div class="col-md-4">
+                <select class="form-control form-control-sm" (change)="tipoBusquedaBanco = $event.target.value">
+                    <option value="0">Por Nro Cheque</option>
+                    <option value="1">Por Banco</option>
+                    <option value="2">Por Fec.Emision</option>
+                    <option value="3">Por Cod. Cheque</option>
+                    <option value="4">Por Proveedor</option>
+                    <option value="5">Por Glosa</option>
+                </select>
+          </div>
+          <div class="col-md-6">
+              <input type="text" #txtBusquedaBanco placeholder="Ingrese un valor"
+              (keyup)="BuscarBanco($event)" class="form-control form-control-sm"
+                autocomplete="off" >
+          </div>
+      </div>
+      <div class="form-group">
+          <div class="col-md-12">
+                <ngx-datatable
+                #tbBanco
+                class="material"
+                [headerHeight]="50"
+                [footerHeight]="50"
+                [count]="true"
+                [columnMode]="'fixed'"
+                [scrollbarH]="true"
+                [rowHeight]="'35'"
+                [reorderable]="true"
+                [limit]="10"
+                [rows]="lstCheque"
+                [messages]="{
+                    emptyMessage: 'No hay registros',
+                    totalMessage: 'Total',
+                    selectedMessage: 'Seleccionado'
+                    }">
+                    <ngx-datatable-column name="" [width] = "70" [cellClass]="'padding-top-custom'" >
+                        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                            <button md-icon-button class="btn btn-primary btn-sm" (click)="SeleccionarCheque($event,row)" >
+                                <i class="fa fa-check"></i>
+                            </button>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Código" prop="CodBanco" [sortable]="false" [resizeable]="true" [width] = "80" [cellClass]="'padding-top-custom'" ></ngx-datatable-column>
+                    <ngx-datatable-column name="Nombre Banco" prop="DescBanco"  [resizeable]="true" [width] = "170" [cellClass]="'padding-top-custom'" ></ngx-datatable-column>
+                    <ngx-datatable-column name="Cheque" prop="CodCheque"  [resizeable]="true" [width] = "80" [cellClass]="'padding-top-custom'" ></ngx-datatable-column>
+                    <ngx-datatable-column name="Nro.Cheque" prop="NumeroCheque"  [resizeable]="true" [width] = "40" [cellClass]="'padding-top-custom'" ></ngx-datatable-column>
+                    <ngx-datatable-column name="Proveedor" prop="NomProveedor"  [resizeable]="true" [width] = "200" [cellClass]="'padding-top-custom'" ></ngx-datatable-column>
+                    <ngx-datatable-column name="Fec.Emisión" prop="FecEmision"  [resizeable]="true" [width]="80" [cellClass]="'padding-top-custom'">
+                      <ng-template  prop="FecRegistro" let-row="row" let-rowIndex="rowIndex" let-value="value" ngx-datatable-cell-template>
+                          <label> {{value | date:'dd/MM/yyyy'}}</label>
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Fec.Uso" prop="Fecuso"  [resizeable]="true" [width] = "80" [cellClass]="'padding-top-custom'" >
+                      <ng-template prop="Fecuso" let-row="row" let-rowIndex="rowIndex" let-value="value" ngx-datatable-cell-template>
+                        <label> {{value | date:'dd/MM/yyyy'}}</label>
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Total" prop="TotalDoc"  [resizeable]="true" [width] = "80" [cellClass]="'padding-top-custom'" ></ngx-datatable-column>
+                    <ngx-datatable-column name="Moneda" prop="DescMoneda"  [resizeable]="true" [width] = "80" [cellClass]="'padding-top-custom'" ></ngx-datatable-column>
+                    <ngx-datatable-column name="Comentario" prop="comentarioDoc"  [resizeable]="true" [width] = "200" [cellClass]="'padding-top-custom'" ></ngx-datatable-column>
+                    <ngx-datatable-column name="Estado" prop="EstadoDoc"  [resizeable]="true" [width] = "80" [cellClass]="'padding-top-custom'" ></ngx-datatable-column>
+                </ngx-datatable>
+          </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger" (click)="modal.close()">Cerrar</button>
+  </div>
+</ng-template>
+<!-- //---------------------------------------MODAL PAGO PROVEEDOR -->
+<ng-template #contentProveedor let-modal>
+  <div class="modal-header">
+      <h3 class="modal-title" id="modal-basic-title">Buscar Cliente</h3>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+      </button>
+  </div>
+  <div class="modal-body">
+      <form (keydown.enter)="$event.preventDefault()">
+      <div class="form-group row">
+          <div class="col-md-4">
+              <select class="form-control form-control-sm" [value]="tipoBusquedaProveedor" (change)="tipoBusquedaProveedor = $event.target.value">
+                  <option value="CodProveedor">Por código</option>
+                  <option value="NomProveedor">Por nombre</option>
+                  <option value="RucProveedor">Por ruc</option>
+                  <option value="DirProveedor">Por Direccion</option>
+              </select>
+          </div>
+          <div class="col-md-6">
+              <input type="text" placeholder="Ingrese una valor"
+              (keyup.enter)="BuscarProveedor($event)" class="form-control form-control-sm"
+              autocomplete="off">
+          </div>
+      </div>
+      <div class="form-group">
+          <div class="col-md-12">
+                  <ngx-datatable
+                  class="material"
+                  [headerHeight]="50"
+                  [footerHeight]="50"
+                  [columnMode]="'force'"
+                  [scrollbarH]="true"
+                  [rowHeight]="'35'"
+                  [externalPaging]="true"
+                  [externalSorting]="true"
+                  [count]="pageProveedor.count"
+                  [offset]="pageProveedor.offset"
+                  [limit]="pageProveedor.limit"
+                  [sortType]="'single'"
+                  (sort)="onSortProveedor($event)"
+                  (page)="setPageProveedor($event)"
+                  [rows]="lstProveedor"
+                  [messages]="{
+                      emptyMessage: 'No hay registros',
+                      totalMessage: 'Total',
+                      selectedMessage: 'Seleccionado'
+                      }">
+                      <ngx-datatable-column name="" [width] = "50" [cellClass]="'padding-top-custom'" >
+                          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                              <button md-icon-button class="btn btn-primary btn-sm" (click)="SeleccionarProveedor($event, row)">
+                              <i class="fa fa-check"></i>
+                              </button>
+                          </ng-template>
+                      </ngx-datatable-column>
+                      <ngx-datatable-column name="Código" prop="CodProveedor" [resizeable]="true" [width]="100" [cellClass]="'padding-top-custom'" ></ngx-datatable-column>
+                      <ngx-datatable-column name="Nombre" prop="NomProveedor"  [resizeable]="true" [width]="250" [cellClass]="'padding-top-custom'" ></ngx-datatable-column>
+                      <ngx-datatable-column name="RUC" prop="RucProveedor"  [resizeable]="true" [width]="100" [cellClass]="'padding-top-custom'" ></ngx-datatable-column>
+                      <ngx-datatable-column name="Direccion" prop="DirProveedor"  [resizeable]="true" [width]="450" [cellClass]="'padding-top-custom'" ></ngx-datatable-column>
+                  </ngx-datatable>
+          </div>
+      </div>
+      </form>
+  </div>
+  <div class="modal-footer">
+      <button type="button" class="btn btn-danger" (click)="modal.close()">Cerrar</button>
+  </div>
+</ng-template>
+<!-- //---------------------------------------MODAL MONEDA -->
+<ng-template #contentMoneda let-modal>
+  <div class="modal-header">
+    <h3 class="modal-title" id="modal-basic-title">Buscar Moneda</h3>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form (keydown.enter)="$event.preventDefault()">
+      <div class="form-group row">
+          <div class="col-md-4">
+                <select class="form-control form-control-sm" [value]="tipoBusquedaMoneda" (change)="tipoBusquedaMoneda = $event.target.value">
+                    <option value="0">Por código</option>
+                    <option value="1">Por nombre</option>
+                </select>
+          </div>
+          <div class="col-md-6">
+              <input type="text" #txtBusquedaMoneda placeholder="Ingrese un valor"
+                (keyup)="BuscarMoneda($event)" class="form-control form-control-sm"
+                autocomplete="off" >
+          </div>
+      </div>
+      <div class="form-group">
+          <div class="col-md-12">
+                <ngx-datatable
+                #tbMoneda
+                class="material"
+                [headerHeight]="50"
+                [footerHeight]="50"
+                [count]="true"
+                [columnMode]="'fixed'"
+                [scrollbarH]="true"
+                [rowHeight]="'auto'"
+                [reorderable]="true"
+                [limit]="10"
+                [rows]="lstMoneda"
+                [messages]="{
+                    emptyMessage: 'No hay registros',
+                    totalMessage: 'Total',
+                    selectedMessage: 'Seleccionado'
+                    }">
+                    <ngx-datatable-column name="" [width] = "70">
+                        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                            <button md-icon-button class="btn btn-primary btn-sm" (click)="SeleccionarMoneda($event, row)">
+                                <i class="fa fa-check"></i>
+                            </button>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Código" prop="CodMoneda" [sortable]="false" [resizeable]="true" [width] = "150"></ngx-datatable-column>
+                    <ngx-datatable-column name="Moneda" prop="DescMoneda"  [resizeable]="true" [width] = "400"></ngx-datatable-column>
+                </ngx-datatable>
+          </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger" (click)="modal.close()">Cerrar</button>
+  </div>
+</ng-template>
+<!-- //---------------------------------------MODAL PAGO PENDIENTE -->
+<ng-template #contentPago let-modal>
+  <div class="modal-header">
+      <h3 class="modal-title" id="modal-basic-title">Buscar Documentos a Pagar</h3>
+      <a class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+      </a>
+  </div>
+  <div class="modal-body">
+      <form (keydown.enter)="$event.preventDefault()">
+      <div class="form-group row">
+          <div class="col-md-4">
+              <select class="form-control form-control-sm" [value]="tipoBusquedaPago" (change)="tipoBusquedaPago = $event.target.value">
+                  <option value="NumeroDoc">Por serie-nro</option>
+                  <option value="FecVcmto">Por fecha vencimiento</option>
+                  <option value="Total">Por total</option>
+              </select>
+          </div>
+          <div class="col-md-6">
+              <input type="text" placeholder="Ingrese una valor"
+              (keyup.enter)="BuscarPago($event)" class="form-control form-control-sm"
+              autocomplete="off">
+          </div>
+      </div>
+      <div class="form-group">
+          <div class="col-md-12">
+                  <ngx-datatable
+                  class="material"
+                  [headerHeight]="50"
+                  [footerHeight]="50"
+                  [columnMode]="'force'"
+                  [scrollbarH]="true"
+                  [rowHeight]="'35'"
+                  [externalPaging]="true"
+                  [externalSorting]="true"
+                  [count]="pagePago.count"
+                  [offset]="pagePago.offset"
+                  [limit]="pagePago.limit"
+                  [sortType]="'single'"
+                  (sort)="onSortPago($event)"
+                  (page)="setPagePago($event)"
+                  [rows]="lstPago"
+                  [messages]="{
+                      emptyMessage: 'No hay registros',
+                      totalMessage: 'Total',
+                      selectedMessage: 'Seleccionado'
+                      }">
+                      <ngx-datatable-column name="" [width] = "60" [cellClass]="'padding-top-custom'" >
+                          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                              <button md-icon-button class="btn btn-primary btn-sm" (click)="SeleccionarPago($event, row)">
+                              <i class="fa fa-check"></i>
+                              </button>
+                          </ng-template>
+                      </ngx-datatable-column>
+                      <ngx-datatable-column name="Documento" prop="CodDocumento" [resizeable]="true" [cellClass]="'padding-top-custom'" ></ngx-datatable-column>
+                      <ngx-datatable-column name="Serie-Nro" prop="NumeroDoc"  [resizeable]="true" [cellClass]="'padding-top-custom'" ></ngx-datatable-column>
+                      <ngx-datatable-column name="Moneda" prop="DescMoneda"  [resizeable]="true" [cellClass]="'padding-top-custom'" ></ngx-datatable-column>
+                      <ngx-datatable-column name="Cargo" prop="cargo"  [resizeable]="true" [cellClass]="'padding-top-custom'" ></ngx-datatable-column>
+                      <ngx-datatable-column name="Total" prop="Total"  [resizeable]="true" [cellClass]="'padding-top-custom'" ></ngx-datatable-column>
+                      <ngx-datatable-column name="Saldo" prop="Saldo"  [resizeable]="true" [cellClass]="'padding-top-custom'" ></ngx-datatable-column>
+                      <ngx-datatable-column name="Ruc" prop="rucProveedor"  [resizeable]="true" [cellClass]="'padding-top-custom'" ></ngx-datatable-column>
+                      <ngx-datatable-column name="FecRegistro" prop="FecRegistro"  [resizeable]="true" [cellClass]="'padding-top-custom'" >
+                          <ng-template  prop="FecRegistro" let-row="row" let-rowIndex="rowIndex" let-value="value" ngx-datatable-cell-template>
+                              <label> {{value | date:'dd/MM/yyyy'}}</label>
+                          </ng-template>
+                      </ngx-datatable-column>
+                      <ngx-datatable-column name="FecVcmto" prop="FecVcmto"  [resizeable]="true" [cellClass]="'padding-top-custom'" >
+                          <ng-template  prop="FecVcmto" let-row="row" let-rowIndex="rowIndex" let-value="value" ngx-datatable-cell-template>
+                              <label> {{value | date:'dd/MM/yyyy'}}</label>
+                          </ng-template>
+                      </ngx-datatable-column>
+                      <ngx-datatable-column name="TC" prop="ValorTC"  [resizeable]="true" [cellClass]="'padding-top-custom'" ></ngx-datatable-column>
+                      <ngx-datatable-column name="CodMoneda" prop="CodMoneda"  [resizeable]="true" [cellClass]="'padding-top-custom'" ></ngx-datatable-column>
+                      <ngx-datatable-column name="CodProveedor" prop="CodProveedor"  [resizeable]="true" [cellClass]="'padding-top-custom'" ></ngx-datatable-column>
+                      <ngx-datatable-column name="rucProveedor" prop="rucProveedor"  [resizeable]="true" [cellClass]="'padding-top-custom'" ></ngx-datatable-column>
+
+                  </ngx-datatable>
+          </div>
+      </div>
+      </form>
+  </div>
+  <div class="modal-footer">
+      <button type="button" class="btn btn-danger" (click)="modal.close()">Cerrar</button>
+  </div>
+</ng-template>
+<!-- //-------------------------------------------------MODAL CUENTA CONTABLE -->
+<ng-template #contentCtaContable let-modal>
+  <div class="modal-header">
+      <h3 class="modal-title" id="modal-basic-title">Buscar Cuenta Contable</h3>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+      </button>
+  </div>
+  <div class="modal-body">
+      <form (keydown.enter)="$event.preventDefault()">
+      <div class="form-group row">
+          <div class="col-md-4">
+              <select class="form-control form-control-sm" [value]="tipoBusquedaCtaContable" (change)="tipoBusquedaCtaContable = $event.target.value">
+                  <option value="CodCuenta">Por código</option>
+                  <option value="DescCuenta">Por descripción</option>
+                  <option value="CuentaPadre">Por código padre</option>
+                  <option value="DescCuentaPadre">Por descripción padre</option>
+              </select>
+          </div>
+          <div class="col-md-6">
+              <input type="text" placeholder="Ingrese una valor"
+              (keyup.enter)="BuscarCtaContable($event)" class="form-control form-control-sm"
+              autocomplete="off">
+          </div>
+      </div>
+      <div class="form-group">
+          <div class="col-md-12">
+                  <ngx-datatable
+                  class="material"
+                  [headerHeight]="50"
+                  [footerHeight]="50"
+                  [columnMode]="'force'"
+                  [scrollbarH]="true"
+                  [rowHeight]="'35'"
+                  [externalPaging]="true"
+                  [externalSorting]="true"
+                  [count]="pageCtaContable.count"
+                  [offset]="pageCtaContable.offset"
+                  [limit]="pageCtaContable.limit"
+                  [sortType]="'single'"
+                  (sort)="onSortCtaContable($event)"
+                  (page)="setPageCtaContable($event)"
+                  [rows]="lstCtaContable"
+                  [messages]="{
+                      emptyMessage: 'No hay registros',
+                      totalMessage: 'Total',
+                      selectedMessage: 'Seleccionado'
+                      }">
+                      <ngx-datatable-column name="" [width] = "100" [cellClass]="'padding-top-custom'" >
+                          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                              <button md-icon-button class="btn btn-primary btn-sm" (click)="SeleccionarCtaContable($event, row)">
+                              <i class="fa fa-check"></i>
+                              </button>
+                          </ng-template>
+                      </ngx-datatable-column>
+                      <ngx-datatable-column name="Código" prop="CodCuenta" [width]="100" [resizeable]="true" [cellClass]="'padding-top-custom'" ></ngx-datatable-column>
+                      <ngx-datatable-column name="Descripción" prop="DescCuenta" [width]="360" [resizeable]="true" [cellClass]="'padding-top-custom'" ></ngx-datatable-column>
+                      <ngx-datatable-column name="Código Padre" prop="CuentaPadre" [width]="128" [resizeable]="true" [cellClass]="'padding-top-custom'" ></ngx-datatable-column>
+                      <ngx-datatable-column name="Descripción Padre" prop="DescCuentaPadre" [width]="360" [resizeable]="true" [cellClass]="'padding-top-custom'" ></ngx-datatable-column>
+                  </ngx-datatable>
+          </div>
+      </div>
+      </form>
+  </div>
+  <div class="modal-footer">
+      <button type="button" class="btn btn-danger" (click)="modal.close()">Cerrar</button>
+  </div>
+</ng-template>
+<swal
+  #deleteSwal
+  title="Estás seguro?"
+  text="Se eliminará el registro seleccionado"
+  type="warning"
+  [showCancelButton]="true"
+  [focusCancel]="true"
+  confirmButtonText="Si"
+  cancelButtonText="No"
+  >
+</swal>
+
+<swal
+  #anularSwal
+  title="Estás seguro?"
+  text="Se anulará la cobranza."
+  type="warning"
+  [showCancelButton]="true"
+  [focusCancel]="true"
+  confirmButtonText="Si"
+  cancelButtonText="No"
+  >
+</swal>
+
+<swal
+  #ErrorForm
+  title="Error de validación"
+  text="Complete los campos obligatorios"
+  type="error"
+  confirmButtonText="OK"
+  >
+</swal>
+
+<swal
+  #ErrorFormHtml
+  title="Error de validación"
+  html=""
+  type="error"
+  confirmButtonText="OK"
+  >
+</swal>
+

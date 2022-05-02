@@ -1,0 +1,813 @@
+<div class="row">
+    <div class="col-lg-12">
+        <div class="wrapper wrapper-content">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>{{ nombrePag }}</h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link" href="">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+
+                        <form [formGroup]="formCompra" (ngSubmit)="GuardarCompra()" (keydown.enter)="$event.preventDefault()">
+                            <div class="form-group row">
+                                <div class="col-md-7">
+                                    <div class="form-group row">
+                                        <div class="col-md-6">
+                                            <label>Almacen:</label>
+                                            <select class="form-control form-control-sm"
+                                            [(ngModel)]="oCompras.CodAlmacen" name="CodAlmacen"
+                                            #CodAlmacen
+                                            formControlName="CodAlmacen"
+                                            >
+                                                <option value="">-Seleccione-</option>
+                                                <option *ngFor="let item of lstAlmacen" [ngValue]="item.CodAlmacen">{{item.DescAlmacen}}</option>
+                                            </select>
+                                            <span *ngIf="isSubmit && formCompra.controls.CodAlmacen.errors?.required"   class="badge badge-danger">Requerido</span>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label>Fecha Emisión:</label>
+                                            <input type="text" placeholder="dd/mm/yyyy" id="exampleInputEmail2"
+                                                        class="form-control form-control-sm"  [(ngModel)]="oCompras.dFecEmision" name="FecEmision"
+                                                        ngbDatepicker #fecEmision="ngbDatepicker" (focus)="fecEmision.toggle()"
+                                                        autocomplete="off"
+                                                        formControlName="fecEmision">
+                                            <span *ngIf="isSubmit && formCompra.controls.fecEmision.errors?.required"   class="badge badge-danger">Requerido</span>
+                                        </div>
+                                        <div class="col-md-3"> <!--justify-content-center align-self-center-->
+                                            <label>Fecha Registro:</label>
+                                            <input type="text" placeholder="dd/mm/yyyy" id="exampleInputEmail2"
+                                                    class="form-control form-control-sm" [(ngModel)]="oCompras.dFecRegistro" name="fecRegistro"
+                                                    ngbDatepicker #fecRegistro="ngbDatepicker" (focus)="fecRegistro.toggle()"
+                                                    autocomplete="off"
+                                                    formControlName="fecRegistro">
+                                            <span *ngIf="isSubmit && formCompra.controls.fecRegistro.errors?.required"   class="badge badge-danger">Requerido</span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-12">
+                                            <label>Proveedor:</label>
+                                            <div class="col-md-12">
+                                                <div class="form-group row">
+                                                    <div class="form-group">
+                                                        <input type="text" id="exampleInputEmail2"
+                                                        class="form-control form-control-sm col-md-12" readonly
+                                                        [(ngModel)]="oCompras.CodProveedor" name="CodProveedor"
+                                                        #CodProveedor
+                                                        formControlName="CodProveedor">
+                                                        <span *ngIf="isSubmit && formCompra.controls.CodProveedor.errors?.required"   class="badge badge-danger">Requerido</span>
+                                                    </div>
+                                                    &nbsp;
+                                                    <div class="form-group">
+                                                        <button type="button"
+                                                        class="btn btn-success btn-sm"
+                                                        [disabled]="isVisualizar"
+                                                        (click)="AbrirModalProveedor(contentProveedor, $event)">
+                                                            <i class="fa fa-search"></i>
+                                                        </button>
+                                                    </div>
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    <input type="text" id="exampleInputEmail2"
+                                                        class="form-control form-control-sm col-md-3" readonly
+                                                        [(ngModel)]="oCompras.Proveedor.NomProveedor" name="NomProveedor"
+                                                        #NomProveedor
+                                                        formControlName="NomProveedor">
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    <input type="text" id="exampleInputEmail2"
+                                                        class="form-control form-control-sm col-md-3" readonly
+                                                        [(ngModel)]="oCompras.Proveedor.RucProveedor" name="RucProveedor"
+                                                        #RucProveedor
+                                                        formControlName="RucProveedor">
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-4">
+                                            <label>Cond. Pago:</label>
+                                            <select class="form-control form-control-sm"
+                                            [(ngModel)]="oCompras.Codcondpago" name="CodCondPago"
+                                            #CodCondPago
+                                            formControlName="CodCondPago">
+                                                <option value="">-Seleccione-</option>
+                                                <option *ngFor="let item of lstCondicionPago" [ngValue]="item.CodCondPago">{{item.DescCondPago}}</option>
+                                            </select>
+                                            <span *ngIf="isSubmit && formCompra.controls.CodCondPago.errors?.required"   class="badge badge-danger">Requerido</span>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <label>Sucursal:</label>
+                                            <select class="form-control form-control-sm"
+                                            [(ngModel)]="oCompras.Codsucursal" name="CodigoSucursal"
+                                            #CodigoSucursal
+                                            formControlName="CodigoSucursal">
+                                                <option value="">-Seleccione-</option>
+                                                <option *ngFor="let item of lstSucursal" [ngValue]="item.CodigoSucursal">{{item.Descsucursal}}</option>
+                                            </select>
+                                            <span *ngIf="isSubmit && formCompra.controls.CodigoSucursal.errors?.required"   class="badge badge-danger">Requerido</span>
+                                        </div>
+                                        <div class="col-md-3"> <!--justify-content-center align-self-center-->
+                                            <label>C. Costo:</label>
+                                            <select class="form-control form-control-sm"
+                                            [(ngModel)]="oCompras.Codccosto" name="Codccosto"
+                                            #Codccosto
+                                            formControlName="Codccosto">
+                                                <option value="">-Seleccione-</option>
+                                                <option *ngFor="let item of lstCentroCosto" value="{{item.Codccosto}}">{{item.Descccosto}}</option>
+                                            </select>
+                                            <span *ngIf="isSubmit && formCompra.controls.Codccosto.errors?.required"   class="badge badge-danger">Requerido</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            <i class="fa fa-info-circle"></i> Tipo Operación
+                                        </div>
+                                        <div class="panel-body form-group">
+                                            <div class="col-md-12">
+                                                <label>Operación:</label>
+                                                <!-- PREGUNTAR POR COD DOCUMENTO (OPERACION) -->
+                                                <select class="form-control form-control-sm"
+                                                [(ngModel)]="oCompras.CodDocumento" name="CodDocumento"
+                                                (ngModelChange)="ActualizarRequeridos()"
+                                                required
+                                                #CodDocumento
+                                                formControlName="CodDocumento">
+                                                    <option value="">-Seleccione-</option>
+                                                    <option *ngFor="let item of lstDocumento" [ngValue]="item.CodDocumento">{{item.DescDocumento}}</option>
+                                                </select>
+                                                <span *ngIf="isSubmit && formCompra.controls.CodDocumento.errors?.required"   class="badge badge-danger">Requerido</span>
+                                            </div>
+                                            <br>
+                                            <div class="form-group row">
+                                                <div class="col-md-6">
+                                                    <input type="text" placeholder="Serie"
+                                                            class="form-control form-control-sm"
+                                                            [(ngModel)]="oCompras.SerieDoc" maxlength="4"
+                                                            name="Serie"
+                                                            (keyup)="mayus($event)"
+                                                            (blur)="AgregarCeros($event,'1')"
+                                                            autocomplete="off"
+                                                            #Serie
+                                                            formControlName="Serie"
+                                                            >
+                                                    <span *ngIf="isSubmit && formCompra.controls.Serie.errors?.required"   class="badge badge-danger">Requerido</span>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <input type="text" placeholder="Nro"
+                                                            class="form-control form-control-sm" [(ngModel)]="oCompras.NroDoc" maxlength="8"
+                                                            name="Nro"
+                                                            (keypress)="soloEnteros($event)"
+                                                            (blur)="AgregarCeros($event,'2')"
+                                                            autocomplete="off"
+                                                            #Nro
+                                                            formControlName="Nro">
+                                                    <span *ngIf="isSubmit && formCompra.controls.Nro.errors?.required" class="badge badge-danger">Requerido</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-2">
+                                    <label>Moneda:</label>
+                                    <select class="form-control form-control-sm"
+                                    [(ngModel)]="oCompras.CodMoneda" (ngModelChange)="ActualizarPrecios()" name="CodMoneda"
+                                    #CodMoneda
+                                    formControlName="CodMoneda">
+                                        <option *ngFor="let item of lstMoneda" [ngValue]="item.CodMoneda">{{item.DescMoneda}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <label>T/C:</label>
+                                    <input type="text"
+                                            class="form-control form-control-sm" [(ngModel)]="oCompras.ValorTC" name="TC"
+                                            #TC
+                                            (keypress)="soloNumeros($event)"
+                                            formControlName="TC">
+                                    <span *ngIf="isSubmit && formCompra.controls.TC.errors?.required"   class="badge badge-danger">Requerido</span>
+                                </div>
+                                <div class="col-md-2">
+                                    <label>F. Kardex:</label>
+                                    <input type="text" placeholder="dd/mm/yyyy"
+                                                    class="form-control form-control-sm" [(ngModel)]="oCompras.dFecKardex"
+                                                    name="FecKardex"
+                                                    ngbDatepicker #fecKardex="ngbDatepicker" (focus)="fecKardex.toggle()"
+                                                    autocomplete="off"
+                                                    formControlName="fecKardex">
+                                    <span *ngIf="isSubmit && formCompra.controls.fecKardex.errors?.required"   class="badge badge-danger">Requerido</span>
+                                </div>
+                                <div class="col-md-1">
+                                    <label>Kardex:</label>
+                                    <!-- Label para bajar el boton (artificio) -->
+                                    <label  class="form-control" style="display: none;"></label>
+                                    <button type="button" class="btn btn-success btn-sm"
+                                    (click)="ActualizarKardex()"
+                                    title="Guardar Kardex" [disabled]="!isVisualizar">
+                                        <i class="fa fa-archive"></i>
+                                    </button>
+                                </div>
+                                <div class="col-md-2">
+                                    <label>F. Contable:</label>
+                                    <input type="text" placeholder="dd/mm/yyyy" id="exampleInputEmail2"
+                                                    class="form-control form-control-sm" [(ngModel)]="oCompras.dFecContable"
+                                                    name="FecContable"
+                                                    ngbDatepicker #fecContable="ngbDatepicker" (focus)="fecContable.toggle()"
+                                                    autocomplete="off"
+                                                    formControlName="fecContable">
+                                    <span *ngIf="isSubmit && formCompra.controls.fecContable.errors?.required"   class="badge badge-danger">Requerido</span>
+                                </div>
+                                 <div class="col-md-2">
+                                    <label>Incluye IGV:</label>
+                                    <select class="form-control form-control-sm"
+                                    [(ngModel)]="oCompras.IncluyeIGV" (ngModelChange)="CambiarIGV()" name="IncluyeIGV"
+                                    #IncluyeIGV
+                                    formControlName="IncluyeIGV">
+                                        <option value="1">Sí</option>
+                                        <option value="0">No</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-2">
+                                    <label>Fecha Vencimiento:</label>
+                                    <input type="text" placeholder="dd/mm/yyyy" id="exampleInputEmail2"
+                                                    class="form-control form-control-sm" [(ngModel)]="oCompras.dFecentrega"
+                                                    name="FecVencimiento"
+                                                    ngbDatepicker #fecVencimiento="ngbDatepicker" (focus)="fecVencimiento.toggle()"
+                                                    autocomplete="off"
+                                                    formControlName="fecVencimiento">
+                                    <span *ngIf="isSubmit && formCompra.controls.fecVencimiento.errors?.required"   class="badge badge-danger">Requerido</span>
+                                </div>
+                                <div class="col-md-2">
+                                    <label>Tipo Doc. Ref:</label>
+                                    <select class="form-control form-control-sm"
+                                    [(ngModel)]="oCompras.DocRef" name="CodTipoDocRef"
+                                    (ngModelChange)="CambiarTipo()"
+                                    #CodTipoDocRef
+                                    formControlName="CodTipoDocRef">
+                                        <option value="00">Ninguno</option>
+                                        <option value="01">Factura</option>
+                                        <option value="03">Boleta</option>
+                                        <option value="12">Ticket</option>
+                                    </select>
+                                    <span *ngIf="isSubmit && isDocRefRequerid && isNinguno"   class="badge badge-danger">Requerido</span>
+                                </div>
+                                <div class="col-md-2">
+                                    <label>Fecha Ref. Doc.:</label>
+                                    <input type="text" placeholder="dd/mm/yyyy" id="exampleInputEmail2"
+                                                    class="form-control form-control-sm" [(ngModel)]="oCompras.dFecRef"
+                                                    name="FecDoc"
+                                                    ngbDatepicker #fecDoc="ngbDatepicker" (focus)="fecDoc.toggle()"
+                                                    autocomplete="off"
+                                                    formControlName="fecDoc">
+                                    <span *ngIf="isSubmit && formCompra.controls.fecDoc.errors?.required"   class="badge badge-danger">Requerido</span>
+                                </div>
+                                <div class="col-md-2">
+                                    <label>Serie - Nro Ref.:</label>
+                                    <input type="text" id="exampleInputEmail2"
+                                                    class="form-control form-control-sm"
+                                                    [(ngModel)]="oCompras.numDocReferencia"
+                                                    name="SerieNroRef"
+                                                    autocomplete="off"
+                                                    #SerieNroRef
+                                                    formControlName="SerieNroRef">
+                                    <span *ngIf="isSubmit && formCompra.controls.SerieNroRef.errors?.required"   class="badge badge-danger">Requerido</span>
+                                </div>
+
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-12">
+                                    <ngx-datatable
+                                    #tbDetalle
+                                    class="material striped"
+                                    [headerHeight]="50"
+                                    [footerHeight]="50"
+                                    [count]="true"
+                                    [columnMode]="'fixed'"
+                                    [scrollbarH]="true"
+                                    [rowHeight]="'35'"
+                                    [reorderable]="true"
+
+                                    [rows]="lstDetalleCompra"
+                                    (activate)="SelecionarDetalle($event)"
+                                    [messages]="{
+                                        emptyMessage: 'No hay registros',
+                                        totalMessage: 'Total',
+                                        selectedMessage: 'Seleccionado'
+                                      }">
+                                        <!-- <ngx-datatable-column name="Item" prop="Item" [sortable]="false" [resizeable]="false" [width]="60">
+                                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                                <div  style="width: 200%; height: 200%;">
+                                                    <label>{{value}}</label>
+                                                </div>
+                                            </ng-template>
+                                        </ngx-datatable-column> -->
+                                        <ngx-datatable-column name="Item" prop="NumItem" [sortable]="false" [resizeable]="false" [width]="60" [cellClass]="'padding-top-custom'">
+                                            <ng-template  prop="NumItem" let-row="row" let-rowIndex="rowIndex" let-value="value" ngx-datatable-cell-template>
+                                                <label class="float-center"> {{ value  }}</label>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+                                        <ngx-datatable-column name="Código" prop="CodArticulo" [sortable]="false"  [resizeable]="false" [cellClass]="'padding-top-custom'" [width]="120" ></ngx-datatable-column>
+                                        <ngx-datatable-column name="Cantidad" prop="cantidad" [sortable]="false" [resizeable]="false" [width]="120" [cellClass]="'padding-top-custom'" [headerClass]="'alinear-derecha'">
+                                            <ng-template let-row="row" let-rowIndex="rowIndex" let-value="value" ngx-datatable-cell-template >
+                                                <span
+                                                title="Doble click para editar"
+                                                (dblclick)="editing[rowIndex + '-cantidad'] = true"
+                                                *ngIf="!editing[rowIndex + '-cantidad']"
+                                                class="float-right">
+                                                    {{ value != "" || value == "0" ? value.toFixed(2) : "" }}
+                                                </span>
+
+                                                <input
+                                                    autofocus
+                                                    (blur)="ActualizarFila($event, 'cantidad', rowIndex)"
+                                                    *ngIf="editing[rowIndex + '-cantidad']"
+                                                    (keydown.enter)="$event.target.blur();"
+                                                    type="text"
+                                                    [value]="value"
+                                                    class="form-control form-control-sm text-right small"
+                                                    (keypress)="soloNumeros($event)"/>
+
+
+                                            </ng-template>
+                                        </ngx-datatable-column>
+                                        <ngx-datatable-column name="Unidad" prop="oArticulo.DescUnidadMedida" [sortable]="false" [resizeable]="false" [width]="100" [cellClass]="'padding-top-custom'"></ngx-datatable-column>
+                                        <ngx-datatable-column name="Artículo" prop="oArticulo.DescArticuloVta" [sortable]="false" [resizeable]="false" [width]="300" [cellClass]="'padding-top-custom'"></ngx-datatable-column>
+                                        <ngx-datatable-column name="P. Unitario" prop="preccompra" [sortable]="false" [resizeable]="false" [cellClass]="'padding-top-custom'" [headerClass]="'alinear-derecha'">
+                                            <ng-template let-row="row" let-rowIndex="rowIndex" let-value="value" ngx-datatable-cell-template>
+                                                <span
+                                                title="Doble click para editar"
+                                                (dblclick)="editing[rowIndex + '-preccompra'] = true"
+                                                *ngIf="!editing[rowIndex + '-preccompra']"
+                                                class="float-right">
+                                                    {{ value != "" || value == "0" ? value : ""}}
+                                                </span>
+                                              <input
+                                                autofocus
+                                                (blur)="ActualizarFila($event, 'preccompra', rowIndex)"
+                                                *ngIf="editing[rowIndex + '-preccompra']"
+                                                (keydown.enter)="$event.target.blur();"
+                                                type="text"
+                                                [value]="value"
+                                                class="form-control form-control-sm text-right"
+                                                (keypress)="soloNumeros($event)"/>
+
+                                            </ng-template>
+                                        </ngx-datatable-column>
+
+                                        <ngx-datatable-column name="Dscto. %" prop="dscTotasa" [sortable]="false" [resizeable]="false" [cellClass]="'padding-top-custom'" [headerClass]="'alinear-derecha'">
+                                            <ng-template let-row="row" let-rowIndex="rowIndex" let-value="value" ngx-datatable-cell-template>
+                                                <span
+                                                title="Doble click para editar"
+                                                (dblclick)="editing[rowIndex + '-dscTotasa'] = true"
+                                                *ngIf="!editing[rowIndex + '-dscTotasa']"
+                                                class="float-right">
+                                                    {{ value != "" || value == "0" ? value.toFixed(3) : "" }}
+                                                </span>
+                                              <input
+                                                autofocus
+                                                (blur)="ActualizarFila($event, 'dscTotasa', rowIndex)"
+                                                *ngIf="editing[rowIndex + '-dscTotasa']"
+                                                (keydown.enter)="$event.target.blur();"
+                                                type="text"
+                                                [value]="value"
+                                                class="form-control form-control-sm text-right"
+                                                (keypress)="soloNumeros($event)"/>
+
+                                            </ng-template>
+                                        </ngx-datatable-column>
+                                        <ngx-datatable-column name="Dscto. Valor" prop="dsctovalor" [sortable]="false" [resizeable]="false" [cellClass]="'padding-top-custom'" [headerClass]="'alinear-derecha'">
+                                            <ng-template let-row="row" let-rowIndex="rowIndex" let-value="value" ngx-datatable-cell-template>
+                                                <span
+                                                title="Doble click para editar"
+                                                (dblclick)="editing[rowIndex + '-dsctovalor'] = true"
+                                                *ngIf="!editing[rowIndex + '-dsctovalor']"
+                                                class="float-right">
+                                                    {{ value != "" || value == "0" ? value.toFixed(2) : "" }}
+                                                </span>
+                                              <input
+                                                autofocus
+                                                (blur)="ActualizarFila($event, 'dsctovalor', rowIndex)"
+                                                *ngIf="editing[rowIndex + '-dsctovalor']"
+                                                (keydown.enter)="$event.target.blur();"
+                                                type="text"
+                                                [value]="value"
+                                                class="form-control form-control-sm text-right"
+                                                (keypress)="soloNumeros($event)"/>
+
+                                            </ng-template>
+                                        </ngx-datatable-column>
+                                        <ngx-datatable-column name="Recargo %" prop="RecargoTasa" [sortable]="false" [resizeable]="false" [cellClass]="'padding-top-custom'" [headerClass]="'alinear-derecha'">
+                                            <ng-template let-row="row" let-rowIndex="rowIndex" let-value="value" ngx-datatable-cell-template>
+                                                <span
+                                                title="Doble click para editar"
+                                                (dblclick)="editing[rowIndex + '-RecargoTasa'] = true"
+                                                *ngIf="!editing[rowIndex + '-RecargoTasa']"
+                                                class="float-right">
+                                                    {{ value != "" || value == "0" ? value.toFixed(2) : "" }}
+                                                </span>
+                                              <input
+                                                autofocus
+                                                (blur)="ActualizarFila($event, 'RecargoTasa', rowIndex)"
+                                                *ngIf="editing[rowIndex + '-RecargoTasa']"
+                                                (keydown.enter)="$event.target.blur();"
+                                                type="text"
+                                                [value]="value"
+                                                class="form-control form-control-sm text-right"
+                                                (keypress)="soloNumeros($event)"/>
+
+                                            </ng-template>
+                                        </ngx-datatable-column>
+                                        <ngx-datatable-column name="Recargo Valor" prop="RecargoValor" [sortable]="false" [resizeable]="false" [cellClass]="'padding-top-custom'" [headerClass]="'alinear-derecha'">
+                                            <ng-template let-row="row" let-rowIndex="rowIndex" let-value="value" ngx-datatable-cell-template>
+                                                <span
+                                                title="Doble click para editar"
+                                                (dblclick)="editing[rowIndex + '-RecargoValor'] = true"
+                                                *ngIf="!editing[rowIndex + '-RecargoValor']"
+                                                class="float-right">
+                                                    {{ value != "" || value == "0" ? value.toFixed(2) : "" }}
+                                                </span>
+                                              <input
+                                                autofocus
+                                                (blur)="ActualizarFila($event, 'RecargoValor', rowIndex)"
+                                                *ngIf="editing[rowIndex + '-RecargoValor']"
+                                                (keydown.enter)="$event.target.blur();"
+                                                type="text"
+                                                [value]="value"
+                                                class="form-control form-control-sm text-right"
+                                                (keypress)="soloNumeros($event)"/>
+
+                                            </ng-template>
+                                        </ngx-datatable-column>
+                                        <ngx-datatable-column name="Neto" prop="netoDet" [sortable]="false" [resizeable]="false" [cellClass]="'padding-top-custom'" [headerClass]="'alinear-derecha'">
+                                            <ng-template let-row="row" let-rowIndex="rowIndex" let-value="value" ngx-datatable-cell-template>
+                                                <span
+                                                title="Doble click para editar"
+                                                (dblclick)="editing[rowIndex + '-netoDet'] = true"
+                                                *ngIf="!editing[rowIndex + '-netoDet']"
+                                                class="float-right">
+                                                    {{ value != "" || value == "0" ? value.toFixed(2) : "" }}
+                                                </span>
+                                              <input
+                                                autofocus
+                                                (blur)="ActualizarFila($event, 'netoDet', rowIndex)"
+                                                *ngIf="editing[rowIndex + '-netoDet']"
+                                                (keydown.enter)="$event.target.blur();"
+                                                type="text"
+                                                [value]="value"
+                                                class="form-control form-control-sm text-right"
+                                                (keypress)="soloNumeros($event)"/>
+
+                                            </ng-template>
+                                        </ngx-datatable-column>
+                                        <ngx-datatable-column name="IGV" prop="ivaDet" [sortable]="false"  [resizeable]="false" [cellClass]="'padding-top-custom'" [headerClass]="'alinear-derecha'">
+                                            <ng-template  prop="ivaDet" let-row="row" let-rowIndex="rowIndex" let-value="value" ngx-datatable-cell-template>
+                                                <label class="float-right"> {{ value != "" || value == "0" ? value.toFixed(2) : "" }}</label>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+                                        <ngx-datatable-column name="Total" prop="TotalDet" [sortable]="false"  [resizeable]="false" [cellClass]="'padding-top-custom'" [headerClass]="'alinear-derecha'">
+                                            <ng-template let-row="row" let-rowIndex="rowIndex" let-value="value" ngx-datatable-cell-template>
+                                                <span
+                                                title="Doble click para editar"
+                                                (dblclick)="editing[rowIndex + '-TotalDet'] = true"
+                                                *ngIf="!editing[rowIndex + '-TotalDet']"
+                                                class="float-right">
+                                                    {{ value != "" || value == "0" ? value.toFixed(2) : "" }}
+                                                </span>
+                                              <input
+                                                autofocus
+                                                (blur)="ActualizarFila($event, 'TotalDet', rowIndex)"
+                                                *ngIf="editing[rowIndex + '-TotalDet']"
+                                                (keydown.enter)="$event.target.blur();"
+                                                type="text"
+                                                [value]="value"
+                                                class="form-control form-control-sm text-right"
+                                                (keypress)="soloNumeros($event)"/>
+
+                                            </ng-template>
+                                        </ngx-datatable-column>
+                                        <ngx-datatable-column name="Costo" prop="PrecCosto" [sortable]="false" [resizeable]="false" [cellClass]="'padding-top-custom'" [headerClass]="'alinear-derecha'">
+                                            <ng-template  prop="PrecCosto" let-row="row" let-rowIndex="rowIndex" let-value="value" ngx-datatable-cell-template>
+                                                <label class="float-right"> {{ value != "" || value == "0" ? value.toFixed(2) : "" }}</label>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+                                    </ngx-datatable>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-6">
+                                    <div class="col-md-12 form-group row">
+                                        <label class="col-sm-4 col-form-label">Mueve Almacen:</label>
+                                        <div class="col-sm-3">
+                                            <select class="form-control form-control-sm "
+                                            [(ngModel)]="oCompras.MueveAlmacen" name="MueveAlmacen"
+                                            #MueveAlmacen
+                                            formControlName="MueveAlmacen">
+                                                <option value="0">Sí</option>
+                                                <option value="1">No</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 form-group row">
+                                        <label class="col-sm-4 col-form-label">Comentario:</label>
+                                        <div class="col-sm-8">
+                                            <textarea class="form-control form-control-sm" rows="4"
+                                            [(ngModel)]="oCompras.comentarioDoc" name="Comentario"
+                                            #Comentario
+                                            formControlName="Comentario"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 form-group row">
+                                        <label class="col-sm-4 col-form-label">Estado Doc.:</label>
+                                        <div class="col-sm-5">
+                                            <select class="form-control form-control-sm " disabled
+                                            [(ngModel)]="oCompras.EstadoDoc" name="CodEstadoDocumento"
+                                            #CodEstadoDocumento
+                                            formControlName="CodEstadoDocumento">
+                                                <option value="0">Atendido</option>
+                                                <option value="1">Pendiente</option>
+                                                <option value="2">Anulado</option>
+                                                <option value="3">Vinculado</option>
+                                                <option value="4">Aprobado</option>
+                                                <option value="5">Canjeado</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 form-group row">
+                                        <label class="col-sm-4 col-form-label">Usuario de Operación:</label>
+                                        <div class="col-sm-8">
+                                            <label>{{ user.Nombres }}</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-12 float-right">
+                                        <div class="form-group  row">
+                                            <label class="col-sm-8 col-form-label text-right">Afecto:</label>
+                                            <div class="col-sm-4">
+                                                <input type="text" class="form-control form-control-sm text-right"
+                                                readonly [(ngModel)]="oCompras.neto" name="Afecto"
+                                                #Afecto
+                                                formControlName="Afecto"></div>
+                                        </div>
+                                        <div class="form-group  row">
+                                            <label class="col-sm-8 col-form-label text-right">IGV:</label>
+                                            <div class="col-sm-4">
+                                                <input type="text" class="form-control form-control-sm text-right"
+                                                readonly [(ngModel)]="oCompras.iva" name="IGV"
+                                                #IGV
+                                                formControlName="IGV"></div>
+                                        </div>
+                                        <div class="form-group  row">
+                                            <label class="col-sm-8 col-form-label text-right">Total:</label>
+                                            <div class="col-sm-4"><input type="text" class="form-control form-control-sm text-right"
+                                                readonly [(ngModel)]="oCompras.TotalDoc" name="Total"
+                                                #Total
+                                                formControlName="Total"></div>
+                                        </div>
+                                        <div class="form-group  row">
+                                            <label class="col-sm-8 col-form-label text-right">Percepcion:</label>
+                                            <div class="col-sm-4">
+                                                <input type="text" class="form-control form-control-sm text-right"
+                                                [(ngModel)]="oCompras.Percepcion" (ngModelChange)="CalcularTotales()"
+                                                name="Percepcion"
+                                                (keypress)="soloNumeros($event)"
+                                                autocomplete="off"
+                                                #Percepcion
+                                                formControlName="Percepcion">
+                                                <span *ngIf="isSubmit && formCompra.controls.Percepcion.errors?.required"   class="badge badge-danger">Requerido</span>
+                                            </div>
+
+                                        </div>
+                                        <div class="form-group  row">
+                                            <label class="col-sm-8 col-form-label text-right">FISE:</label>
+                                            <div class="col-sm-4">
+                                                <input type="text" class="form-control form-control-sm text-right"
+                                                [(ngModel)]="oCompras.Fise" (ngModelChange)="CalcularTotales()"
+                                                name="FISE"
+                                                (keypress)="soloNumeros($event)"
+                                                autocomplete="off"
+                                                #FISE
+                                                formControlName="FISE">
+                                                <span *ngIf="isSubmit && formCompra.controls.FISE.errors?.required"   class="badge badge-danger">Requerido</span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group  row">
+                                            <label class="col-sm-8 col-form-label text-right">Total Documento:</label>
+                                            <div class="col-sm-4"><input type="text" class="form-control form-control-sm text-right" readonly
+                                                [(ngModel)]="oCompras.NvoTotalDoc"
+                                                name="TotalDocumento"
+                                                #TotalDocumento
+                                                formControlName="TotalDocumento"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-12 col-sm-offset-2 d-flex flex-row justify-content-end">
+                                    <a class="btn btn-danger btn-sm " [routerLink]="'/GlassWeb/compras'">
+                                        <i class="fa fa-undo"></i>&nbsp;
+                                        <span>Regresar</span>
+                                    </a>
+                                    &nbsp;&nbsp;
+                                    <button class="btn btn-info btn-sm" #btnGuardar  type="submit" [disabled]="EsDisableSubmit" >
+                                        <i class="fa fa-save"></i>&nbsp;
+                                        <span>Guardar</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<ng-template #contentProveedor let-modal>
+  <div class="modal-header">
+    <h3 class="modal-title" id="modal-basic-title">Buscar Proveedor</h3>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form (keydown.enter)="$event.preventDefault()">
+      <div class="form-group row">
+          <div class="col-md-4">
+                <select class="form-control form-control-sm" [value]="tipoBusquedaProveedor" (change)="tipoBusquedaProveedor = $event.target.value">
+                    <option value="CodProveedor">Por código</option>
+                    <option value="NomProveedor">Por razón social</option>
+                    <option value="RucProveedor">Por RUC</option>
+                </select>
+          </div>
+          <div class="col-md-6">
+              <input type="text" #txtBusquedaProveedor placeholder="Ingrese un valor"
+                (keyup.enter)="BuscarProveedor($event)" class="form-control form-control-sm"
+                autocomplete="off" >
+          </div>
+      </div>
+      <div class="form-group">
+          <div class="col-md-12">
+                <ngx-datatable
+                #tbProveedor
+                class="material"
+                [headerHeight]="50"
+                [footerHeight]="50"
+                [columnMode]="'force'"
+                [scrollbarH]="true"
+                [rowHeight]="'30'"
+                [externalPaging]="true"
+                [externalSorting]="true"
+                [count]="pageProveedor.count"
+                [offset]="pageProveedor.offset"
+                [limit]="pageProveedor.limit"
+                [sortType]="'single'"
+                (sort)="onSortProveedor($event)"
+                (page)="setPageProveedor($event)"
+                [rows]="lstProveedor"
+                [messages]="{
+                    emptyMessage: 'No hay registros',
+                    totalMessage: 'Total',
+                    selectedMessage: 'Seleccionado'
+                    }"
+                    >
+
+                    <ngx-datatable-column name="" [width] = "100" [cellClass]="'padding-top-custom'">
+                        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template >
+                            <div class="center">
+                                <button md-icon-button class="btn btn-primary btn-sm" (click)="SeleccionarProveedor($event, row)">
+                                    <i class="fa fa-check"></i>
+                                </button>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Código" prop="CodProveedor" [sortable]="true" [resizeable]="true" [width] = "174"  [cellClass]="'padding-top-custom'"></ngx-datatable-column>
+                    <ngx-datatable-column name="Razón Social" prop="NomProveedor"  [resizeable]="true" [width] = "520"  [cellClass]="'padding-top-custom'"></ngx-datatable-column>
+                    <ngx-datatable-column name="RUC" prop="RucProveedor"  [resizeable]="true" [width] = "127"  [cellClass]="'padding-top-custom'"></ngx-datatable-column>
+                    <ngx-datatable-column name="Telefono" prop="ContactoNombre"  [resizeable]="true" [width] = "127"  [cellClass]="'padding-top-custom'"></ngx-datatable-column>
+
+
+                </ngx-datatable>
+          </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger" (click)="modal.close()">Cerrar</button>
+  </div>
+</ng-template>
+
+
+<ng-template #contentArticulo let-modal>
+  <div class="modal-header">
+    <h3 class="modal-title" id="modal-basic-title">Buscar Artículo</h3>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form (keydown.enter)="$event.preventDefault()">
+      <div class="form-group row">
+        <div class="col-md-4">
+            <select class="form-control form-control-sm" [value]="tipoBusquedaArticulo" (change)="tipoBusquedaArticulo = $event.target.value">
+                <option value="CodArticulo">Por código</option>
+                <option value="DescArticuloVta">Por descripción</option>
+                <option value="DescFamilia">Por familia</option>
+                <option value="CodProveedor">Por cod proveedor</option>
+            </select>
+        </div>
+        <div class="col-md-6">
+            <input type="text" placeholder="Ingrese una valor"
+            (keyup.enter)="BuscarArticulo($event)" class="form-control form-control-sm"
+            autocomplete="off">
+        </div>
+      </div>
+      <div class="form-group">
+          <div class="col-md-12">
+                <ngx-datatable
+                class="material"
+                [headerHeight]="50"
+                [footerHeight]="50"
+                [columnMode]="'force'"
+                [scrollbarH]="true"
+                [rowHeight]="'30'"
+                [externalPaging]="true"
+                [externalSorting]="true"
+                [count]="pageArticulo.count"
+                [offset]="pageArticulo.offset"
+                [limit]="pageArticulo.limit"
+                [sortType]="'single'"
+                (sort)="onSortArticulo($event)"
+                (page)="setPageArticulo($event)"
+                [rows]="lstArticulo"
+                [messages]="{
+                    emptyMessage: 'No hay registros',
+                    totalMessage: 'Total',
+                    selectedMessage: 'Seleccionado'
+                    }">
+                    <ngx-datatable-column name="" [width] = "60" [cellClass]="'padding-top-custom'">
+                        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                            <button md-icon-button class="btn btn-primary btn-sm" (click)="SeleccionarArticulo($event, row)">
+                              <i class="fa fa-check"></i>
+                            </button>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Código" prop="CodArticulo" [width] = "110"  [resizeable]="true" [cellClass]="'padding-top-custom'"></ngx-datatable-column>
+                    <ngx-datatable-column name="Descripción Comercial" prop="DescArticuloVta"  [resizeable]="true" [width]="300" [cellClass]="'padding-top-custom'"></ngx-datatable-column>
+                    <ngx-datatable-column name="Familia" prop="DescFamilia"  [resizeable]="true" [cellClass]="'padding-top-custom'"></ngx-datatable-column>
+                    <ngx-datatable-column name="Uni. Medida" prop="DescUnidadMedida"  [resizeable]="true" [cellClass]="'padding-top-custom'"></ngx-datatable-column>
+                    <ngx-datatable-column name="P. Uni. MN" prop="PrecCostoMN"  [resizeable]="true" [cellClass]="'padding-top-custom'"></ngx-datatable-column>
+                    <ngx-datatable-column name="P. Uni. ME" prop="PrecCostoME"  [resizeable]="true" [cellClass]="'padding-top-custom'"></ngx-datatable-column>
+                    <ngx-datatable-column name="Cod Proveedor" prop="CodProveedor"  [resizeable]="true" [cellClass]="'padding-top-custom'"></ngx-datatable-column>
+                    <ngx-datatable-column name="Cod Moneda" prop="CodMoneda"  [resizeable]="true" [cellClass]="'padding-top-custom'"></ngx-datatable-column>
+                </ngx-datatable>
+          </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger" (click)="modal.close()">Cerrar</button>
+  </div>
+</ng-template>
+
+
+
+
+<swal
+  #deleteSwal
+  title="Estás seguro?"
+  text="Se eliminará el registro seleccionado"
+  type="warning"
+  [showCancelButton]="true"
+  [focusCancel]="true"
+  confirmButtonText="Si"
+  cancelButtonText="No"
+  >
+</swal>
+
+<swal
+  #ErrorForm
+  title="Error de validación"
+  text="Complete los campos obligatorios"
+  type="error"
+  confirmButtonText="OK"
+  >
+</swal>
+
+<swal
+  #ErrorFormHtml
+  title="Error de validación"
+  html=""
+  type="error"
+  confirmButtonText="OK"
+  >
+</swal>

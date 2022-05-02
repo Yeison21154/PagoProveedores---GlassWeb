@@ -1,0 +1,206 @@
+<div class="row">
+    <div class="col-lg-12">
+        <div class="wrapper wrapper-content">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h3>Listado de Compras</h3>
+                            <div class="ibox-tools">
+                                <a class="collapse-link" href="">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+                            <div class="form-group row ">
+                                <div class="col-sm-12 col-sm-offset-2 d-flex flex-row justify-content-center align-items-center">
+                                    <button class="btn btn-success dim" appPermisos [nombreMenu]="NombreMenu" nombrePermiso="escritura" (click)="RedireccionarNuevaCompra()" type="button" title="Nueva Compra"><i class="fa fa-file"></i></button>
+                                    <button class="btn btn-primary dim" appPermisos [nombreMenu]="NombreMenu" nombrePermiso="lectura" (click)="RedireccionarEditarCompra()" type="button" title="Editar Compra"><i class="fa fa-edit"></i></button>
+                                    <button class="btn btn-danger dim" appPermisos [nombreMenu]="NombreMenu" nombrePermiso="eliminar" type="button" (click)="EliminarCompra()" title="Eliminar Compra"><i class="fa fa-trash"></i></button>
+                                    <button class="btn btn-info dim" type="button" (click)="MostrarBusquedaCompras = !MostrarBusquedaCompras" title="Buscar Compra"><i class="fa fa-search"></i></button>
+
+                                    <button class="btn btn-default dim" appPermisos [nombreMenu]="NombreMenu" nombrePermiso="imprimir" type="button" title="Imprimir" (click)="ImprimirCompra()"><i class="fa fa-print"></i></button>
+
+                                    <button class="btn btn-warning dim" type="button" title="Historial" (click)="AbrirModalHistorial(contentHistorial, $event)"><i class="fa fa-folder-open-o"></i></button>
+                                </div>
+                            </div>
+                            <div class="form-group row" *ngIf="MostrarBusquedaCompras">
+                                <div class="col-md-3">
+                                    <select class="form-control form-control-sm" [value]="tipoBusquedaCompras" (change)="tipoBusquedaCompras = $event.target.value">
+                                        <option value="Documento">Por documento</option>
+                                        <option value="FecEmision">Por fecha emisión</option>
+                                        <option value="DescAlmacen">Por almacen</option>
+                                        <option value="NomProveedor">Por proveedor</option>
+                                        <option value="FecRegistro">Por fecha registro</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" #txtBusquedaCompras placeholder="Ingrese un valor"
+                                        (keyup.enter)="BuscarCompras($event)" class="form-control form-control-sm"
+                                        autocomplete="off" >
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-12">
+                                    <ngx-datatable
+                                    class="material"
+                                    [headerHeight]="50"
+                                    [footerHeight]="50"
+                                    [columnMode]="'force'"
+                                    [scrollbarH]="true"
+                                    [rowHeight]="'30'"
+                                    [externalPaging]="true"
+                                    [externalSorting]="true"
+                                    [count]="page.count"
+                                    [offset]="page.offset"
+                                    [limit]="page.limit"
+                                    [sortType]="'single'"
+                                    (activate)="SelecionarDetalle($event)"
+                                    (sort)="onSort($event)"
+                                    (page)="setPage($event)"
+                                    [rows]="lstCompras"
+                                    [messages]="{
+                                        emptyMessage: 'No hay registros',
+                                        totalMessage: 'Total',
+                                        selectedMessage: 'Seleccionado'
+                                        }">
+                                        <ngx-datatable-column [width]="30"
+                                        [sortable]="false"
+                                        [canAutoResize]="false"
+                                        [draggable]="false"
+                                        [resizeable]="false" [cellClass]="'padding-top-custom'">
+                                            <ng-template  prop="Documento" let-row="row" let-rowIndex="rowIndex" let-value="value" ngx-datatable-cell-template>
+                                                <input type="radio" [value]="row.Documento + row.CodProveedor" [(ngModel)]="radioData"  name="rbCompra" (change)="ListarDetalle(row)">
+                                            </ng-template>
+                                        </ngx-datatable-column>
+                                        <ngx-datatable-column name="Documento" prop="Documento" [sortable]="true" [resizeable]="true" [width]="170" [cellClass]="'padding-top-custom'"></ngx-datatable-column>
+                                        <ngx-datatable-column name="Fecha Emisión" prop="FecEmision"  [resizeable]="true" [width]="140" [cellClass]="'padding-top-custom'">
+                                            <ng-template  prop="FecEmision" let-row="row" let-rowIndex="rowIndex" let-value="value" ngx-datatable-cell-template>
+                                                <label> {{value | date:'dd/MM/yyyy'}}</label>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+                                        <ngx-datatable-column name="Almacen" prop="DescAlmacen"  [resizeable]="true" [width]="150" [cellClass]="'padding-top-custom'"></ngx-datatable-column>
+                                        <ngx-datatable-column name="Proveedor" prop="NomProveedor"  [resizeable]="true" [width]="300" [cellClass]="'padding-top-custom'"></ngx-datatable-column>
+                                        <ngx-datatable-column name="Fecha Registro" prop="FecRegistro"  [resizeable]="true" [width]="140" [cellClass]="'padding-top-custom'">
+                                            <ng-template  prop="FecRegistro" let-row="row" let-rowIndex="rowIndex" let-value="value" ngx-datatable-cell-template>
+                                                <label> {{value | date:'dd/MM/yyyy'}}</label>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+                                        <ngx-datatable-column name="Moneda" prop="DescMoneda"  [resizeable]="true" [width]="100" [cellClass]="'padding-top-custom'"></ngx-datatable-column>
+                                        <ngx-datatable-column name="Total" prop="TotalDoc"  [resizeable]="true" [width]="100" [cellClass]="'padding-top-custom'">
+                                            <ng-template  prop="TotalDoc" let-row="row" let-rowIndex="rowIndex" let-value="value" ngx-datatable-cell-template>
+                                                <label class="float-right"> {{ value.toFixed(2) }}</label>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+                                    </ngx-datatable>
+                                    </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-12">
+                                    <ngx-datatable
+                                    class="material"
+                                    [headerHeight]="50"
+                                    [footerHeight]="50"
+                                    [count]="true"
+                                    [columnMode]="'fixed'"
+                                    [scrollbarH]="true"
+                                    [rowHeight]="'30'"
+                                    [reorderable]="true"
+                                    [limit]="20"
+                                    [rows]="lstComprasDtl"
+                                    [messages]="{
+                                        emptyMessage: 'No hay registros',
+                                        totalMessage: 'Total',
+                                        selectedMessage: 'Seleccionado'
+                                        }">
+                                        <ngx-datatable-column name="Código" prop="CodArticulo" [sortable]="true" [resizeable]="true" [width]="100" [cellClass]="'padding-top-custom'"></ngx-datatable-column>
+                                        <ngx-datatable-column name="Cantidad" prop="cantidad"  [resizeable]="true" [width]="100" [cellClass]="'padding-top-custom'">
+                                            <ng-template  prop="cantidad" let-row="row" let-rowIndex="rowIndex" let-value="value" ngx-datatable-cell-template>
+                                                <label class="float-right"> {{ value.toFixed(2) }}</label>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+                                        <ngx-datatable-column name="Unidad" prop="DescUnidadMedida"  [resizeable]="true" [width]="200" [cellClass]="'padding-top-custom'"></ngx-datatable-column>
+                                        <ngx-datatable-column name="Artículo" prop="DescArticulo"  [resizeable]="true" [width]="400" [cellClass]="'padding-top-custom'"></ngx-datatable-column>
+                                        <ngx-datatable-column name="Precio Unit." prop="preccompra"  [resizeable]="true" [width]="110" [cellClass]="'padding-top-custom'">
+                                            <ng-template  prop="preccompra" let-row="row" let-rowIndex="rowIndex" let-value="value" ngx-datatable-cell-template>
+                                                <label class="float-right"> {{ value.toFixed(2) }}</label>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+                                        <ngx-datatable-column name="Importe" prop="TotalDet"  [resizeable]="true" [width]="100" [cellClass]="'padding-top-custom'">
+                                            <ng-template  prop="TotalDet" let-row="row" let-rowIndex="rowIndex" let-value="value" ngx-datatable-cell-template>
+                                                <label class="float-right"> {{ value.toFixed(2) }}</label>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+                                    </ngx-datatable>
+                                    </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<ng-template #contentHistorial let-modal>
+    <div class="modal-header">
+        <h3 class="modal-title" id="modal-basic-title">Historial</h3>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form>
+        <div class="form-group">
+            <div class="col-md-12">
+                    <ngx-datatable
+                    class="material"
+                    [headerHeight]="50"
+                    [footerHeight]="50"
+                    [count]="true"
+                    [columnMode]="'fixed'"
+                    [scrollbarH]="true"
+                    [rowHeight]="'auto'"
+                    [reorderable]="true"
+                    [limit]="10"
+                    [rows]="lstHistorial"
+                    [messages]="{
+                        emptyMessage: 'No hay registros',
+                        totalMessage: 'Total',
+                        selectedMessage: 'Seleccionado'
+                        }">
+                        <ngx-datatable-column name="Módulo" prop="Modulo" [resizeable]="true" [width]="354"></ngx-datatable-column>
+                        <ngx-datatable-column name="Documento" prop="Documento"  [resizeable]="true" [width]="354"></ngx-datatable-column>
+                    </ngx-datatable>
+            </div>
+        </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger" (click)="modal.close()">Cerrar</button>
+    </div>
+    </ng-template>
+
+<swal
+  #deleteSwal
+  title="Estás seguro?"
+  text="Se eliminará el registro seleccionado"
+  type="warning"
+  [showCancelButton]="true"
+  [focusCancel]="true"
+  confirmButtonText="Si"
+  cancelButtonText="No"
+  >
+</swal>
+
+<swal
+  #ErrorForm
+  title="Error"
+  text="Ha ocurrido un error inesperado, contacte con su administrador."
+  type="error"
+  confirmButtonText="OK"
+  >
+</swal>

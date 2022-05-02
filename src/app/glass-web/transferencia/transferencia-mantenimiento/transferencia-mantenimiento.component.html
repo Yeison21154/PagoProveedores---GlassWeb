@@ -1,0 +1,579 @@
+<div class="row">
+    <div class="col-lg-12">
+        <div class="wrapper wrapper-content">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>{{ nombrePag }}</h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link" href="">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+                        
+                        <form [formGroup]="formTransferencia" (ngSubmit)="GuardarTransferenciaBanco()" (keydown.enter)="$event.preventDefault()">
+                            <div class="form-group row">
+                                <div class="col-md-12 border-bottom">
+                                    <label>Grupo Básico</label>
+                                </div>
+                            </div>
+                            <div class="form-group row" style="margin-bottom: -1rem;">
+                                <div class="col-md-9">
+                                    <div class="form-group row">
+                                        <label class="col-lg-1 col-form-label">Cajero:</label>
+                                        <div class="col-lg-4">
+                                            <div class="input-group">
+                                                <input type="text" id="exampleInputEmail2"
+                                                class="form-control form-control-sm col-md-12" readonly 
+                                                [(ngModel)]="oTransferencia.codcajero" name="CodCajero"
+                                                #CodCajero
+                                                formControlName="CodCajero">
+                                                <span class="input-group-append"> 
+                                                    <button type="button" 
+                                                    class="btn btn-success btn-sm" 
+                                                    [disabled]="true"
+                                                    >
+                                                        <i class="fa fa-search"></i>
+                                                    </button>
+                                                </span>
+                                            </div>
+                                            <span *ngIf="isSubmit && formTransferencia.controls.CodCajero.errors?.required"   class="badge badge-danger">Requerido</span>
+                                        </div>
+                                        <div class="col-lg-7">
+                                            <input type="text" id="exampleInputEmail2"
+                                            class="form-control form-control-sm" readonly
+                                            [(ngModel)]="oTransferencia.Cajero.DescCajero" name="DescCajero"
+                                            #DescCajero
+                                            formControlName="DescCajero">
+                                            <span *ngIf="isSubmit && formTransferencia.controls.DescCajero.errors?.required"   class="badge badge-danger">Requerido</span>
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="form-group row" style="margin-bottom: -1rem;">
+                                        <label class="col-lg-2 col-form-label">Fecha Registro:</label>
+                                        <div class="col-lg-3">
+                                            <input type="text" placeholder="dd/mm/yyyy"
+                                                            class="form-control form-control-sm col-md-12" [(ngModel)]="oTransferencia.dFecRegistro"
+                                                            name="fecRegistro"
+                                                            ngbDatepicker #fecRegistro="ngbDatepicker" (focus)="fecRegistro.toggle()"
+                                                            autocomplete="off"
+                                                            formControlName="fecRegistro">
+                                            <span *ngIf="isSubmit && formTransferencia.controls.fecRegistro.errors?.required"   class="badge badge-danger">Requerido</span>
+                                        </div>
+                                        <label class="col-lg-3 col-form-label">Fec. Emisión o Ing. a Banco:</label>
+                                        <div class="col-lg-4">
+                                            <input type="text" placeholder="dd/mm/yyyy"
+                                                            class="form-control form-control-sm col-md-12" [(ngModel)]="oTransferencia.dFecEmision"
+                                                            name="fecEmision"
+                                                            ngbDatepicker #fecEmision="ngbDatepicker" (focus)="fecEmision.toggle()"
+                                                            autocomplete="off"
+                                                            formControlName="fecEmision">
+                                            <span *ngIf="isSubmit && formTransferencia.controls.fecEmision.errors?.required"   class="badge badge-danger">Requerido</span>
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="form-group row align-items-center">
+                                        <label class="col-lg-1 col-form-label">T/C:</label>
+                                        <div class="col-lg-2">
+                                            <input type="text" 
+                                                    class="form-control form-control-sm col-md-12" [(ngModel)]="oTransferencia.valortc" name="TC"
+                                                    #TC
+                                                    (keypress)="soloNumeros($event)"
+                                                    (blur)="CalcularTotales()"
+                                                    formControlName="TC">
+                                            <span *ngIf="isSubmit && formTransferencia.controls.TC.errors?.required"   class="badge badge-danger">Requerido</span>
+                                        </div>
+                                        <label class="col-lg-2 col-form-label">Hora (HH:MM) de 24 Horas:</label>
+                                        <div class="col-lg-3">
+                                            <ngb-timepicker [(ngModel)]="oTransferencia.dHora" (keypress)="soloEnteros($event)" formControlName="hora"></ngb-timepicker>
+                                            <span *ngIf="isSubmit && formTransferencia.controls.hora.errors?.required"   class="badge badge-danger">Requerido</span>
+                                        </div>
+                                        <label class="col-lg-1 col-form-label">Fecha Recibido:</label>
+                                        <div class="col-lg-3">
+                                            <input type="text" placeholder="dd/mm/yyyy"
+                                                            class="form-control form-control-sm col-md-12" [(ngModel)]="oTransferencia.dFecRecibido"
+                                                            name="fecRecibido"
+                                                            ngbDatepicker #fecRecibido="ngbDatepicker" (focus)="fecRecibido.toggle()"
+                                                            autocomplete="off"
+                                                            formControlName="fecRecibido">
+                                            <span *ngIf="isSubmit && formTransferencia.controls.fecRecibido.errors?.required"   class="badge badge-danger">Requerido</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <label>Operación:</label>
+                                            <!-- PREGUNTAR POR COD DOCUMENTO (OPERACION) -->
+                                            <select class="form-control form-control-sm" 
+                                            [(ngModel)]="oTransferencia.coddocumento" 
+                                            (ngModelChange)="SeleccionarTipoOperacion()"
+                                            name="CodOperacion"
+                                            required
+                                            #CodOperacion
+                                            formControlName="CodOperacion">
+                                                <option value="">-Seleccione-</option>
+                                                <option *ngFor="let item of lstDocumento" [ngValue]="item.CodDocumento">{{item.DescDocumento}}</option>
+                                            </select>
+                                            <span *ngIf="isSubmit && formTransferencia.controls.CodOperacion.errors?.required"   class="badge badge-danger">Requerido</span>
+                                        </div>
+                                        <br>
+                                        <div class="form-group row p-xxs">
+                                            <div class="col-md-6">
+                                                <input type="text" placeholder="Serie" 
+                                                        class="form-control form-control-sm" 
+                                                        [(ngModel)]="oTransferencia.seriedoc" maxlength="4"
+                                                        name="Serie"
+                                                        (keyup)="mayus($event)"
+                                                        (blur)="AgregarCeros($event,'1')"
+                                                        autocomplete="off"
+                                                        #Serie
+                                                        formControlName="Serie"
+                                                        >
+                                                <span *ngIf="isSubmit && formTransferencia.controls.Serie.errors?.required"   class="badge badge-danger">Requerido</span>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <input type="text" placeholder="Nro" 
+                                                        class="form-control form-control-sm" [(ngModel)]="oTransferencia.nrodoc" maxlength="7"
+                                                        name="Nro"
+                                                        (keypress)="soloEnteros($event)"
+                                                        (blur)="AgregarCeros($event,'2')"
+                                                        autocomplete="off"
+                                                        #Nro
+                                                        formControlName="Nro">
+                                                <span *ngIf="isSubmit && formTransferencia.controls.Nro.errors?.required" class="badge badge-danger">Requerido</span>
+                                            </div>
+                                        </div>  
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-12 border-bottom">
+                                    <label>Otros Datos</label>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-8">
+                                    <label>Comentario:</label>
+                                    <textarea class="form-control form-control-sm" rows="4" 
+                                            [(ngModel)]="oTransferencia.comentario" name="Comentario"
+                                            #Comentario
+                                            formControlName="Comentario"></textarea>
+                                    <span *ngIf="isSubmit && formTransferencia.controls.Comentario.errors?.required"   class="badge badge-danger">Requerido</span>
+                                </div>         
+                                <div class="col-md-4">
+                                    <div class="form-group row">
+                                        <div class="col-md-12">
+                                            <label>Estado:</label>
+                                            <select class="form-control form-control-sm " disabled 
+                                            [(ngModel)]="oTransferencia.estadodoc" name="CodEstadoDocumento"
+                                            #CodEstadoDocumento
+                                            formControlName="CodEstadoDocumento">
+                                                <option value="2">ANULADO</option>
+                                                <option value="4">APROBADO</option>
+                                                <option value="5">REVISADO</option>
+                                            </select>
+                                            <span *ngIf="isSubmit && formTransferencia.controls.CodEstadoDocumento.errors?.required"   class="badge badge-danger">Requerido</span>
+                                        </div>
+                                        
+                                    </div>
+                                </div>                       
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-12">
+                                    <ngx-datatable 
+                                    #tbDetalle
+                                    class="material striped" 
+                                    [headerHeight]="50"
+                                    [footerHeight]="50"
+                                    [count]="true"
+                                    [columnMode]="'fixed'"
+                                    [scrollbarH]="true"
+                                    [rowHeight]="'auto'"
+                                    [reorderable]="true"
+                                    [rows]="lstDetalleTransferencia"
+                                    (activate)="SeleccionarDetalle($event)"
+                                    [messages]="{
+                                        emptyMessage: 'No hay registros',
+                                        totalMessage: 'Total',
+                                        selectedMessage: 'Seleccionado'
+                                      }">
+                                        <ngx-datatable-column name="Item" prop="item" [sortable]="false" [resizeable]="false" [width]="60"></ngx-datatable-column>
+                                        <ngx-datatable-column name="Banco/Caja Origen" prop="descbancoorigen" [sortable]="false"  [resizeable]="false" [width]="300" ></ngx-datatable-column>
+                                        <ngx-datatable-column name="Moneda" prop="descmonedaorigen" [sortable]="false"  [resizeable]="false" [width]="130"></ngx-datatable-column>
+                                        <ngx-datatable-column name="Monto" prop="monto" [sortable]="false"  [resizeable]="false" >
+                                            <ng-template let-row="row" let-rowIndex="rowIndex" let-value="value" ngx-datatable-cell-template>
+                                                <span
+                                                title="Doble click para editar"
+                                                (dblclick)="editing[rowIndex + '-monto'] = true"
+                                                *ngIf="!editing[rowIndex + '-monto']"
+                                                class="float-right">
+                                                    {{ value != "" || value == "0" ? value.toFixed(2) : "" }}
+                                                    <!-- {{ value }} -->
+                                                </span>
+                                                <input
+                                                autofocus
+                                                (blur)="ActualizarFila($event, 'monto', rowIndex)"
+                                                *ngIf="editing[rowIndex + '-monto']"
+                                                (keydown.enter)="$event.target.blur();"
+                                                type="text"
+                                                [value]="value" 
+                                                class="form-control form-control-sm text-right"
+                                                (keypress)="soloNumeros($event)"/>
+                                    
+                                            </ng-template>
+                                        </ngx-datatable-column>
+                                        <ngx-datatable-column name="Banco/Caja Destino" prop="descbancodestino" [sortable]="false"  [resizeable]="false" [width]="300"></ngx-datatable-column>
+                                        <ngx-datatable-column name="Moneda" prop="descmonedadestino" [sortable]="false"  [resizeable]="false" [width]="130"></ngx-datatable-column>
+                                        <ngx-datatable-column name="Cajero Destino" prop="desccajero" [sortable]="false"  [resizeable]="false" [width]="300"></ngx-datatable-column>
+                                        <ngx-datatable-column name="Operación" prop="operacion" [sortable]="false"  [resizeable]="false" [width]="180">
+                                            <ng-template let-row="row" let-rowIndex="rowIndex" let-value="value" ngx-datatable-cell-template>
+                                                <span
+                                                title="Doble click para editar"
+                                                (dblclick)="editing[rowIndex + '-operacion'] = true"
+                                                *ngIf="!editing[rowIndex + '-operacion']">
+                                                    {{ value }} 
+                                                </span>
+                                                <input
+                                                autofocus
+                                                (blur)="ActualizarFila($event, 'operacion', rowIndex)"
+                                                *ngIf="editing[rowIndex + '-operacion']"
+                                                (keydown.enter)="$event.target.blur();"
+                                                type="text"
+                                                [value]="value" 
+                                                class="form-control form-control-sm"/>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+                                        <ngx-datatable-column name="Glosa" prop="glosa" [sortable]="false"  [resizeable]="false" [width]="180">
+                                            <ng-template let-row="row" let-rowIndex="rowIndex" let-value="value" ngx-datatable-cell-template>
+                                                <span
+                                                title="Doble click para editar"
+                                                (dblclick)="editing[rowIndex + '-glosa'] = true"
+                                                *ngIf="!editing[rowIndex + '-glosa']">
+                                                    {{ value }} 
+                                                </span>
+                                                <input
+                                                autofocus
+                                                (blur)="ActualizarFila($event, 'glosa', rowIndex)"
+                                                *ngIf="editing[rowIndex + '-glosa']"
+                                                (keydown.enter)="$event.target.blur();"
+                                                type="text"
+                                                [value]="value" 
+                                                class="form-control form-control-sm"/>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+                                    </ngx-datatable>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-md-2">
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group row">
+                                        <div class="col-md-11 border-bottom">
+                                            <label>El importe de:</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label">Efectivo S/.</label>
+                                        <div class="col-lg-6">
+                                            <input type="text" 
+                                                    class="form-control form-control-sm col-md-12" [(ngModel)]="oTransferencia.impefectivomn" name="Impefectivomn"
+                                                    #Impefectivomn
+                                                    (keypress)="soloNumeros($event)"
+                                                    formControlName="Impefectivomn"
+                                                    readonly>
+                                            <span *ngIf="isSubmit && formTransferencia.controls.Impefectivomn.errors?.required"   class="badge badge-danger">Requerido</span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label">Efectivo $.</label>
+                                        <div class="col-lg-6">
+                                            <input type="text" 
+                                                    class="form-control form-control-sm col-md-12" [(ngModel)]="oTransferencia.impefectivome" name="Impefectivome"
+                                                    #Impefectivome
+                                                    (keypress)="soloNumeros($event)"
+                                                    formControlName="Impefectivome"
+                                                    readonly>
+                                            <span *ngIf="isSubmit && formTransferencia.controls.Impefectivome.errors?.required"   class="badge badge-danger">Requerido</span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label">Cheque S/.</label>
+                                        <div class="col-lg-6">
+                                            <input type="text" 
+                                                    class="form-control form-control-sm col-md-12" [(ngModel)]="oTransferencia.impechequemn" name="Impechequemn"
+                                                    #Impechequemn
+                                                    (keypress)="soloNumeros($event)"
+                                                    formControlName="Impechequemn">
+                                            <span *ngIf="isSubmit && formTransferencia.controls.Impechequemn.errors?.required"   class="badge badge-danger">Requerido</span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label">Cheque $.</label>
+                                        <div class="col-lg-6">
+                                            <input type="text" 
+                                                    class="form-control form-control-sm col-md-12" [(ngModel)]="oTransferencia.impechequeme" name="Impechequeme"
+                                                    #Impechequeme
+                                                    (keypress)="soloNumeros($event)"
+                                                    formControlName="Impechequeme">
+                                            <span *ngIf="isSubmit && formTransferencia.controls.Impechequeme.errors?.required"   class="badge badge-danger">Requerido</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group row">
+                                        <div class="col-md-11 border-bottom">
+                                            <label>Boletas de Depósito:</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label">Efectivo S/.</label>
+                                        <div class="col-lg-6">
+                                            <input type="text" 
+                                                    class="form-control form-control-sm col-md-12" [(ngModel)]="oTransferencia.depoefectivomn" name="Depoefectivomn"
+                                                    #Depoefectivomn
+                                                    (keypress)="soloNumeros($event)"
+                                                    formControlName="Depoefectivomn">
+                                            <span *ngIf="isSubmit && formTransferencia.controls.Depoefectivomn.errors?.required"   class="badge badge-danger">Requerido</span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label">Efectivo $.</label>
+                                        <div class="col-lg-6">
+                                            <input type="text" 
+                                                    class="form-control form-control-sm col-md-12" [(ngModel)]="oTransferencia.depoefectivome" name="Depoefectivome"
+                                                    #Depoefectivome
+                                                    (keypress)="soloNumeros($event)"
+                                                    formControlName="Depoefectivome">
+                                            <span *ngIf="isSubmit && formTransferencia.controls.Depoefectivome.errors?.required"   class="badge badge-danger">Requerido</span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label">Cheque S/.</label>
+                                        <div class="col-lg-6">
+                                            <input type="text" 
+                                                    class="form-control form-control-sm col-md-12" [(ngModel)]="oTransferencia.depoechequemn" name="Depoechequemn"
+                                                    #Depoechequemn
+                                                    (keypress)="soloNumeros($event)"
+                                                    formControlName="Depoechequemn">
+                                            <span *ngIf="isSubmit && formTransferencia.controls.Depoechequemn.errors?.required"   class="badge badge-danger">Requerido</span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label">Cheque $.</label>
+                                        <div class="col-lg-6">
+                                            <input type="text" 
+                                                    class="form-control form-control-sm col-md-12" [(ngModel)]="oTransferencia.depoechequeme" name="Depoechequeme"
+                                                    #Depoechequeme
+                                                    (keypress)="soloNumeros($event)"
+                                                    formControlName="Depoechequeme">
+                                            <span *ngIf="isSubmit && formTransferencia.controls.Depoechequeme.errors?.required"   class="badge badge-danger">Requerido</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                </div>                       
+                            </div>
+
+
+                            <div class="form-group row">
+                                <div class="col-md-12 col-sm-offset-2 d-flex flex-row justify-content-end">
+                                    <a class="btn btn-danger btn-sm " [routerLink]="'/GlassWeb/transferencia-banco'">
+                                        <i class="fa fa-undo"></i>&nbsp;
+                                        <span>Regresar</span>
+                                    </a>
+                                    &nbsp;&nbsp;
+                                    <button class="btn btn-success btn-sm"  (click)="RevisarTransferencia()" type="button" [disabled]="EsEnableRevisar">
+                                        <i class="fa fa-check"></i>&nbsp;
+                                        <span>{{ nombreRevisar }}</span>
+                                    </button>
+                                    &nbsp;&nbsp;
+                                    <button class="btn btn-warning btn-sm"  (click)="AnularTransferencia()" type="button" [disabled]="EsEnableAnular">
+                                        <i class="fa fa-ban"></i>&nbsp;
+                                        <span>Anular</span>
+                                    </button>
+                                    &nbsp;&nbsp;
+                                    <button class="btn btn-info btn-sm" type="submit" [disabled]="EsDisableSubmit" >
+                                        <i class="fa fa-save"></i>&nbsp;
+                                        <span>Guardar</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                        </div>        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #contentBanco let-modal>
+    <div class="modal-header">
+      <h3 class="modal-title" id="modal-basic-title">Buscar Banco</h3>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form>
+        <div class="form-group row">
+            <div class="col-md-4">
+                  <select class="form-control form-control-sm" [value]="tipoBusquedaBanco" (change)="tipoBusquedaBanco = $event.target.value">
+                      <option value="0">Por código</option>
+                      <option value="1">Por nombre</option>
+                      <option value="2">Por moneda</option>
+                  </select>
+            </div>
+            <div class="col-md-6">
+                <input type="text" #txtBusquedaBanco placeholder="Ingrese un valor" 
+                  (keyup)="BuscarBanco($event)" class="form-control form-control-sm"
+                  autocomplete="off" >
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-12">
+                  <ngx-datatable 
+                  #tbBanco
+                  class="material" 
+                  [headerHeight]="50"
+                  [footerHeight]="50"
+                  [count]="true"
+                  [columnMode]="'fixed'"
+                  [scrollbarH]="true"
+                  [rowHeight]="'auto'"
+                  [reorderable]="true"
+                  [limit]="10"
+                  [rows]="lstBanco"
+                  [messages]="{
+                      emptyMessage: 'No hay registros',
+                      totalMessage: 'Total',
+                      selectedMessage: 'Seleccionado'
+                      }">
+                      <ngx-datatable-column name="" [width] = "70">
+                          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                              <button md-icon-button class="btn btn-primary btn-sm" (click)="SeleccionarBanco($event, row)">
+                                  <i class="fa fa-check"></i>
+                              </button>
+                          </ng-template>
+                      </ngx-datatable-column>
+                      <ngx-datatable-column name="Código" prop="CodBanco" [sortable]="false" [resizeable]="true" [width] = "100"></ngx-datatable-column>
+                      <ngx-datatable-column name="Nombre Banco" prop="DescBanco"  [resizeable]="true" [width] = "400"></ngx-datatable-column>
+                      <ngx-datatable-column name="Moneda" prop="DescMoneda"  [resizeable]="true" [width] = "137"></ngx-datatable-column>
+                  </ngx-datatable>
+            </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-danger" (click)="modal.close()">Cerrar</button>
+    </div>
+  </ng-template>
+
+  <ng-template #contentCajero let-modal>
+    <div class="modal-header">
+      <h3 class="modal-title" id="modal-basic-title">Buscar Cajero</h3>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form>
+        <div class="form-group row">
+            <div class="col-md-4">
+                  <select class="form-control form-control-sm" [value]="tipoBusquedaCajero" (change)="tipoBusquedaCajero = $event.target.value">
+                      <option value="0">Por código</option>
+                      <option value="1">Por nombre</option>
+                  </select>
+            </div>
+            <div class="col-md-6">
+                <input type="text" #txtBusquedaCajero placeholder="Ingrese un valor" 
+                  (keyup)="BuscarCajero($event)" class="form-control form-control-sm"
+                  autocomplete="off" >
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-12">
+                  <ngx-datatable 
+                  #tbCajero
+                  class="material" 
+                  [headerHeight]="50"
+                  [footerHeight]="50"
+                  [count]="true"
+                  [columnMode]="'fixed'"
+                  [scrollbarH]="true"
+                  [rowHeight]="'auto'"
+                  [reorderable]="true"
+                  [limit]="10"
+                  [rows]="lstCajero"
+                  [messages]="{
+                      emptyMessage: 'No hay registros',
+                      totalMessage: 'Total',
+                      selectedMessage: 'Seleccionado'
+                      }">
+                      <ngx-datatable-column name="" [width] = "70">
+                          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                              <button md-icon-button class="btn btn-primary btn-sm" (click)="SeleccionarCajero($event, row)">
+                                  <i class="fa fa-check"></i>
+                              </button>
+                          </ng-template>
+                      </ngx-datatable-column>
+                      <ngx-datatable-column name="Código" prop="CodCajero" [sortable]="false" [resizeable]="true" [width] = "100"></ngx-datatable-column>
+                      <ngx-datatable-column name="Nombre Cajero" prop="DescCajero"  [resizeable]="true" [width] = "400"></ngx-datatable-column>
+                  </ngx-datatable>
+            </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-danger" (click)="modal.close()">Cerrar</button>
+    </div>
+  </ng-template>
+
+<swal
+  #deleteSwal
+  title="Estás seguro?"
+  text="Se eliminará el registro seleccionado"
+  type="warning"
+  [showCancelButton]="true"
+  [focusCancel]="true"
+  confirmButtonText="Si"
+  cancelButtonText="No"
+  >
+</swal>
+
+<swal
+  #anularSwal
+  title="Estás seguro?"
+  text="Se anulará la transferencia de banco."
+  type="warning"
+  [showCancelButton]="true"
+  [focusCancel]="true"
+  confirmButtonText="Si"
+  cancelButtonText="No"
+  >
+</swal>
+
+<swal
+  #ErrorForm
+  title="Error de validación"
+  text="Complete los campos obligatorios"
+  type="error"
+  confirmButtonText="OK"
+  >
+</swal>
+
+<swal
+  #ErrorFormHtml
+  title="Error de validación"
+  html=""
+  type="error"
+  confirmButtonText="OK"
+  >
+</swal>

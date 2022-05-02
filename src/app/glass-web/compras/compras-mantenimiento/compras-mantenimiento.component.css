@@ -1,0 +1,12 @@
+.padding-top-custom{
+    padding-top: 3px !important;
+    padding-bottom: 3px !important;
+    /* padding: 0.4rem 0.6rem !important; */
+}
+.alinear-derecha{
+    text-align:right !important;
+}
+
+/* .datatable-body-cell{
+    padding: 0.45rem 0.6rem !important;
+} */

@@ -1,0 +1,157 @@
+<div class="row">
+  <div class="col-lg-12">
+    <div class="wrapper wrapper-content">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="ibox ">
+            <div class="ibox-title">
+              <h3>Listado Pago Proveedor</h3>
+              <div class="ibox-tools">
+                  <a class="collapse-link" href="">
+                      <i class="fa fa-chevron-up"></i>
+                  </a>
+              </div>
+          </div>
+          <div class="ibox-content">
+            <div class="form-group row ">
+              <div class="col-sm-12 col-sm-offset-2 d-flex flex-row justify-content-center align-items-center">
+                  <button class="btn btn-success dim" (click)="redirecionarNuevoPagoP()" appPermisos [nombreMenu]="NombreMenu" nombrePermiso="escritura"  type="button" title="Nuevo Proveedor"><i class="fa fa-file"></i></button>
+                  <button class="btn btn-primary dim"  (click)="RedireccionarEditarPagoP()" appPermisos [nombreMenu]="NombreMenu" nombrePermiso="lectura"  type="button" title="Editar Proveedor"><i class="fa fa-edit"></i></button>
+                  <button class="btn btn-danger dim" appPermisos [nombreMenu]="NombreMenu" nombrePermiso="eliminar" (click)="EliminarProveedor()" type="button"  title="Eliminar Proveedor"><i class="fa fa-trash"></i></button>
+                  <button class="btn btn-info dim" type="button" (click)="MostrarBusqueda = !MostrarBusqueda" title="Buscar Proveedor"><i class="fa fa-search"></i></button>
+                  <button class="btn btn-default dim" appPermisos [nombreMenu]="NombreMenu" nombrePermiso="imprimir" type="button" title="Imprimir" (click)="ImprimirPagoProveedor()"><i class="fa fa-print"></i></button>
+                </div>
+          </div>
+          <div class="form-group row" *ngIf="MostrarBusqueda">
+            <div class="col-md-4">
+                <select class="form-control form-control-sm" [value]="tipoBusqueda" (change)="tipoBusqueda = $event.target.value">
+                  <option value="Documento">Por documento</option>
+                  <option value="FecRegistro">Por fecha Registro</option>
+                  <option value="FecEmision">Por fecha emisión</option>
+                  <option value="DescBanco">Por Banco</option>
+                  <option value="NumeroCheque">Por Cheque</option>
+                  <option value="TotalDoc">Por Total</option>
+                  <option value="TDocumento">Por Fact/Bole/Dive/Anti</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <input type="text" #txtBusquedaCompras placeholder="Ingrese un valor"
+                    (keyup.enter)="BuscarPagosProveedor($event)" class="form-control form-control-sm"
+                    autocomplete="off" >
+            </div>
+        </div>
+          <!-- --------------------------------------------------- -->
+          <div class="form-group-row mb-4">
+            <div class="col-md-12">
+              <ngx-datatable
+              class="material"
+              [headerHeight]="50"
+              [footerHeight]="50"
+              [columnMode]="'force'"
+              [scrollbarH]="true"
+              [rowHeight]="'30'"
+              [externalPaging]="true"
+              [externalSorting]="true"
+              [count]="page.count"
+              [offset]="page.offset"
+              [limit]="page.limit"
+              [sortType]="'single'"
+              (activate)="SelecionarDetalle($event)"
+              (sort)="onSort($event)"
+              (page)="setPage($event)"
+              [rows]="listCuentas"
+              [messages]="{
+                emptyMessage: 'No hay registros',
+                totalMessage: 'Total',
+                selectedMessage: 'Seleccionado'
+                }"
+              >
+                  <ngx-datatable-column [width]="30"
+                                        [sortable]="false"
+                                        [canAutoResize]="false"
+                                        [draggable]="false"
+                                        [resizeable]="false" [cellClass]="'padding-top-custom'">
+                                            <ng-template  prop="NumeroDoc" let-row="row" let-rowIndex="rowIndex" let-value="value" ngx-datatable-cell-template>
+                                                <input type="radio" [value]="row.Documento + row.CodProveedor" [(ngModel)]="data" (change)="ListarDetalle(row)">
+                                            </ng-template>
+                  </ngx-datatable-column>
+                  <ngx-datatable-column name="Documento" prop="Documento"  [resizeable]="true" [width]="150" [cellClass]="'padding-top-custom'"></ngx-datatable-column>
+                  <ngx-datatable-column name="CodBanco " prop="CodBanco"  [resizeable]="true" [width]="90" [cellClass]="'padding-top-custom'"></ngx-datatable-column>
+                  <ngx-datatable-column name="Banco" prop="Banco"  [resizeable]="true" [width]="150" [cellClass]="'padding-top-custom'"></ngx-datatable-column>
+                  <ngx-datatable-column name="Cajero" prop="Cajero"  [resizeable]="true" [width]="90" [cellClass]="'padding-top-custom'"></ngx-datatable-column>
+                  <ngx-datatable-column name="Fecha Emisión" prop="FecRegistro"  [resizeable]="true" [width]="140" [cellClass]="'padding-top-custom'">
+                    <ng-template  prop="FecRegistro" let-row="row" let-rowIndex="rowIndex" let-value="value" ngx-datatable-cell-template>
+                        <label> {{value | date:'dd/MM/yyyy'}}</label>
+                    </ng-template>
+                </ngx-datatable-column>
+                  <ngx-datatable-column name="Num. Cheque" prop="NumeroCheque"  [resizeable]="true" [width]="90" [cellClass]="'padding-top-custom'"></ngx-datatable-column>
+                  <ngx-datatable-column name="CodCheque" prop="CodCheque"  [resizeable]="true" [width]="110" [cellClass]="'padding-top-custom'"></ngx-datatable-column>
+                  <ngx-datatable-column name="Cheque" prop="Cheque"  [resizeable]="true" [width]="130" [cellClass]="'padding-top-custom'"></ngx-datatable-column>
+                  <ngx-datatable-column name="Moneda" prop="DescMoneda"  [resizeable]="true" [width]="100" [cellClass]="'padding-top-custom'"></ngx-datatable-column>
+                  <ngx-datatable-column name="T.C" prop="ValorTC"  [resizeable]="true" [width]="80" [cellClass]="'padding-top-custom'"></ngx-datatable-column>
+                  <ngx-datatable-column name="TotalDoc" prop="TotalDoc"  [resizeable]="true" [width]="150" [cellClass]="'padding-top-custom'"></ngx-datatable-column>
+                  <ngx-datatable-column name="Comentario" prop="comentarioDet"  [resizeable]="true" [width]="300" [cellClass]="'padding-top-custom'"></ngx-datatable-column>
+              </ngx-datatable>
+            </div>
+          </div>
+          <!-- ------------------------FIN CUENTAS POR PAGAR Y INICIO DETALLE --------------------------- -->
+          <div class="form-group-row">
+            <div class="col-md-12">
+              <ngx-datatable
+                  class="material"
+                  [headerHeight]="50"
+                  [footerHeight]="50"
+                  [count]="true"
+                  [columnMode]="'fixed'"
+                  [scrollbarH]="true"
+                  [rowHeight]="'30'"
+                  [reorderable]="true"
+                  [limit]="20"
+                  [rows]="ListarCuentaDtl"
+                  [messages]="{
+                    emptyMessage: 'No hay registros',
+                    totalMessage: 'Total',
+                    selectedMessage: 'Seleccionado'
+                    }"
+              >
+                <ngx-datatable-column name="Item" prop="NumItem"  [resizeable]="true" [width]="50" [cellClass]="'padding-top-custom'"></ngx-datatable-column>
+                <ngx-datatable-column name="Tipo Pago" prop="TipoDocumento"  [resizeable]="true" [width]="100" [cellClass]="'padding-top-custom'"></ngx-datatable-column>
+                <ngx-datatable-column name="Cod. Proveedor" prop="CodProveedor"  [resizeable]="true" [width]="120" [cellClass]="'padding-top-custom'"></ngx-datatable-column>
+                <ngx-datatable-column name="Proveedor" prop="nomProveedor"  [resizeable]="true" [width]="200" [cellClass]="'padding-top-custom'"></ngx-datatable-column>
+                <ngx-datatable-column name="Documento" prop="Documento"  [resizeable]="true" [width]="150" [cellClass]="'padding-top-custom'"></ngx-datatable-column>
+                <ngx-datatable-column name="Moneda" prop="DescMoneda"  [resizeable]="true" [width]="80" [cellClass]="'padding-top-custom'"></ngx-datatable-column>
+                <ngx-datatable-column name="Total" prop="TotalDet"  [resizeable]="true" [width]="90" [cellClass]="'padding-top-custom'"></ngx-datatable-column>
+                <ngx-datatable-column name="Comentario" prop="comentarioDet"  [resizeable]="true" [width]="230" [cellClass]="'padding-top-custom'"></ngx-datatable-column>
+                <ngx-datatable-column name="Cod. Cuenta" prop="Codctacontable"  [resizeable]="true" [width]="120" [cellClass]="'padding-top-custom'"></ngx-datatable-column>
+
+              </ngx-datatable>
+            </div>
+          </div>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<swal
+  #ErrorForm
+  title="Error"
+  text="Ha ocurrido un error inesperado, contacte con su administrador."
+  type="error"
+  confirmButtonText="OK"
+  >
+</swal>
+
+<swal
+  #deleteSwal
+  title="Estás seguro?"
+  text="Se eliminará el registro seleccionado"
+  type="warning"
+  [showCancelButton]="true"
+  [focusCancel]="true"
+  confirmButtonText="Si"
+  cancelButtonText="No"
+  >
+</swal>
